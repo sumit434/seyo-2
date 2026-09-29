@@ -63,6 +63,7 @@ export const StaffTerminalPage: React.FC = () => {
           loyaltyRecords={terminalData.loyaltyRecords || []}
           rewards={terminalData.rewards || []}
           reviews={terminalData.reviews || []}
+          offerHistory={terminalData.offerHistory || []}
           onRefresh={() => fetchTerminalData(sessionToken!)}
           onLogout={handleLogout}
         />

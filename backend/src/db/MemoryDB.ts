@@ -9,6 +9,7 @@ import { MerchantEntry, CustomerSession } from '../../../shared/types/qr';
 import { OnboardingToken, OnboardingSession } from '../../../shared/types/onboarding';
 import { StaffSession } from '../../../shared/types/session';
 import { createInitialSeedData } from './seed';
+import { hashPin, verifyPin } from '../utils/crypto';
 
 const DB_FILE_PATH = path.resolve(process.cwd(), '.seyo_db_store.json');
 
@@ -57,7 +58,14 @@ export class MemoryDB {
         const raw = fs.readFileSync(DB_FILE_PATH, 'utf-8');
         const data = JSON.parse(raw);
         if (data.businesses && Array.isArray(data.businesses)) {
-          data.businesses.forEach((b: Business) => this.businesses.set(b.id, b));
+          data.businesses.forEach((b: Business) => {
+            if (b.staffPinHash && b.staffPinHash.split(':').length < 5) {
+              if (verifyPin('7788', b.staffPinHash)) {
+                b.staffPinHash = hashPin('7788');
+              }
+            }
+            this.businesses.set(b.id, b);
+          });
         }
         if (data.offers && Array.isArray(data.offers)) {
           data.offers.forEach((o: Offer) => this.offers.set(o.id, o));

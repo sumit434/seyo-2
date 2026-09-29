@@ -3,13 +3,14 @@ import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
 import { staffApi } from '../../services/staffApi';
-import { KeyRound, Tag, CheckCircle2 } from 'lucide-react';
+import { KeyRound, Tag, CheckCircle2, Gift, ShieldCheck } from 'lucide-react';
 
 interface StaffPINModalProps {
   isOpen: boolean;
   onClose: () => void;
   sessionToken: string;
   initialCode?: string;
+  configuredPin?: string;
   onSuccess: () => void;
 }
 
@@ -18,6 +19,7 @@ export const StaffPINModal: React.FC<StaffPINModalProps> = ({
   onClose,
   sessionToken,
   initialCode = '',
+  configuredPin,
   onSuccess,
 }) => {
   const [voucherCode, setVoucherCode] = useState(initialCode);
@@ -38,7 +40,7 @@ export const StaffPINModal: React.FC<StaffPINModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!voucherCode.trim()) {
-      setError('Voucher code is required');
+      setError('Customer voucher code is required');
       return;
     }
     if (!/^\d{4}$/.test(staffPin)) {
@@ -56,9 +58,16 @@ export const StaffPINModal: React.FC<StaffPINModalProps> = ({
         onClose();
       }, 1500);
     } catch (err: any) {
-      setError(err.message || 'Verification failed');
+      setError(err.message || 'Verification failed. Please check the voucher code and staff PIN.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleUseConfiguredPin = () => {
+    if (configuredPin && /^\d{4}$/.test(configuredPin)) {
+      setStaffPin(configuredPin);
+      if (error) setError(null);
     }
   };
 
@@ -66,8 +75,8 @@ export const StaffPINModal: React.FC<StaffPINModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Redeem Customer Voucher"
-      description="Enter the customer voucher code and your 4-digit verification PIN"
+      title="Voucher Redemption"
+      description="Enter the customer voucher code and the configured Staff PIN to authorize redemption"
       maxWidth="sm"
     >
       {successMsg ? (
@@ -85,8 +94,28 @@ export const StaffPINModal: React.FC<StaffPINModalProps> = ({
             </div>
           )}
 
+          {/* Configured Staff PIN Reference Card */}
+          {configuredPin && (
+            <div className="p-3.5 bg-[#f8faf9] rounded-2xl border border-[#e2e7e6] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-[#0e7c66]" />
+                <div className="text-xs">
+                  <span className="text-[#6a787e] font-medium">Configured PIN: </span>
+                  <strong className="font-mono text-[#10181c] font-bold">{configuredPin}</strong>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleUseConfiguredPin}
+                className="text-xs font-bold text-[#0e7c66] hover:underline cursor-pointer bg-white px-2.5 py-1 rounded-lg border border-[#e2e7e6] shadow-2xs"
+              >
+                Auto-fill
+              </button>
+            </div>
+          )}
+
           <Input
-            label="Voucher Passcode"
+            label="Customer Voucher Code"
             placeholder="e.g. SY-7X9K"
             value={voucherCode}
             onChange={e => setVoucherCode(e.target.value.toUpperCase())}
@@ -95,7 +124,7 @@ export const StaffPINModal: React.FC<StaffPINModalProps> = ({
           />
 
           <Input
-            label="4-Digit Staff PIN"
+            label="Staff PIN"
             type="password"
             inputMode="numeric"
             maxLength={4}
@@ -103,6 +132,7 @@ export const StaffPINModal: React.FC<StaffPINModalProps> = ({
             value={staffPin}
             onChange={e => setStaffPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
             leftAddon={<KeyRound className="w-5 h-5 text-[#0e7c66]" />}
+            helperText="Enter your 4-digit merchant staff PIN to verify"
           />
 
           <div className="pt-2 flex gap-3">
@@ -115,8 +145,10 @@ export const StaffPINModal: React.FC<StaffPINModalProps> = ({
               fullWidth
               isLoading={isLoading}
               disabled={!voucherCode || staffPin.length !== 4}
+              className="gap-2"
             >
-              Verify & Redeem
+              <Gift className="w-4 h-4" />
+              <span>Redeem Voucher</span>
             </Button>
           </div>
         </form>

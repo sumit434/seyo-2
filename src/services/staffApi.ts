@@ -29,10 +29,29 @@ export const staffApi = {
     });
   },
 
-  // Cancel offer
-  async cancelOffer(sessionToken: string) {
-    return request('/api/staff/cancel-offer', {
+  // Delete / cancel active offer
+  async deleteOffer(sessionToken: string) {
+    return request('/api/staff/delete-offer', {
       method: 'POST',
+      headers: {
+        'x-staff-session': sessionToken,
+      },
+    });
+  },
+
+  // Cancel offer (alias)
+  async cancelOffer(sessionToken: string) {
+    return request('/api/staff/delete-offer', {
+      method: 'POST',
+      headers: {
+        'x-staff-session': sessionToken,
+      },
+    });
+  },
+
+  // Get historical offers for business
+  async getOfferHistory(sessionToken: string) {
+    return request<{ success: boolean; offers: any[] }>('/api/staff/offer-history', {
       headers: {
         'x-staff-session': sessionToken,
       },

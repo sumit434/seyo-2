@@ -68,4 +68,16 @@ export const customerService = {
   }> {
     return request(`/api/customer/top-rankers/${encodeURIComponent(slug)}`);
   },
+
+  // Redeem voucher on customer phone with staff PIN
+  async redeemVoucher(businessId: string, voucherCode: string, staffPin: string) {
+    return request<{
+      success: boolean;
+      message: string;
+      reward: any;
+    }>('/api/customer/voucher/redeem', {
+      method: 'POST',
+      body: JSON.stringify({ businessId, voucherCode, staffPin }),
+    });
+  },
 };

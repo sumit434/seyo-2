@@ -118,4 +118,33 @@ export class StaffService {
       customerName: reward.customerName || 'Valued Customer',
     };
   }
+
+  /**
+   * Delete/deactivate active offer for a business while preserving history
+   */
+  public deleteActiveOffer(businessId: string): { success: boolean; offer: any } {
+    const offer = this.db.getActiveOfferByBusinessId(businessId);
+    if (!offer) {
+      throw new Error('OFFER_NOT_FOUND: No active offer found to delete');
+    }
+
+    const nowIso = new Date().toISOString();
+    offer.status = 'cancelled';
+    offer.cancelledAt = nowIso;
+    this.db.saveOffer(offer);
+
+    return {
+      success: true,
+      offer,
+    };
+  }
+
+  /**
+   * Get all historical offers for a business (scoped strictly by businessId)
+   */
+  public getOfferHistory(businessId: string) {
+    const offers = this.db.getOffersByBusinessId(businessId);
+    // Sort newest first
+    return offers.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
 }

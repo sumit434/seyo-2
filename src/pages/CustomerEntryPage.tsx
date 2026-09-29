@@ -197,6 +197,7 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
             claimedAt: new Date().toISOString(),
           }}
           businessName={business.name}
+          businessId={business.id}
           onRedeemed={async () => {
             const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
             setStatusData(updated);
@@ -233,6 +234,7 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
             claimedAt: customer.activeVoucher.claimedAt,
           }}
           businessName={business.name}
+          businessId={business.id}
           onRedeemed={async () => {
             const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
             setStatusData(updated);

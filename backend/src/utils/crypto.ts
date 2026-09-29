@@ -37,18 +37,86 @@ export function verifyPassword(password: string, combined: string): boolean {
   }
 }
 
+const PIN_KEY = crypto.createHash('sha256').update(process.env.APP_SECRET || 'seyo_secure_pin_secret_key_2026').digest();
+
 /**
- * Hash a 4-digit staff PIN
+ * Encrypt a 4-digit PIN with AES-256-GCM
+ */
+export function encryptPin(pin: string): string {
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', PIN_KEY, iv);
+  let encrypted = cipher.update(pin, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  const tag = cipher.getAuthTag();
+  return `${iv.toString('hex')}:${tag.toString('hex')}:${encrypted}`;
+}
+
+/**
+ * Decrypt a 4-digit PIN with AES-256-GCM
+ */
+export function decryptPin(encryptedCombined: string): string | null {
+  try {
+    const [ivHex, tagHex, encrypted] = encryptedCombined.split(':');
+    if (!ivHex || !tagHex || !encrypted) return null;
+    const decipher = crypto.createDecipheriv('aes-256-gcm', PIN_KEY, Buffer.from(ivHex, 'hex'));
+    decipher.setAuthTag(Buffer.from(tagHex, 'hex'));
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Hash a 4-digit staff PIN using PBKDF2 salt + secure reversible ciphertext
+ * Format: `${salt}:${hash}:${iv}:${tag}:${ciphertext}`
  */
 export function hashPin(pin: string): string {
-  return hashPassword(pin);
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.pbkdf2Sync(pin, salt, 10000, 32, 'sha256').toString('hex');
+  const encrypted = encryptPin(pin);
+  return `${salt}:${hash}:${encrypted}`;
 }
 
 /**
  * Verify a 4-digit staff PIN
  */
 export function verifyPin(pin: string, combined: string): boolean {
-  return verifyPassword(pin, combined);
+  try {
+    const parts = combined.split(':');
+    const salt = parts[0];
+    const originalHash = parts[1];
+    if (!salt || !originalHash) return false;
+    const testHash = crypto.pbkdf2Sync(pin, salt, 10000, 32, 'sha256').toString('hex');
+    return crypto.timingSafeEqual(Buffer.from(testHash, 'hex'), Buffer.from(originalHash, 'hex'));
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Extract configured PIN for authorized staff terminal display
+ */
+export function extractConfiguredPin(combined: string): string | null {
+  try {
+    const parts = combined.split(':');
+    // If format is salt:hash:iv:tag:ciphertext (5 parts)
+    if (parts.length >= 5) {
+      const encryptedPart = `${parts[2]}:${parts[3]}:${parts[4]}`;
+      const decrypted = decryptPin(encryptedPart);
+      if (decrypted && /^\d{4}$/.test(decrypted)) {
+        return decrypted;
+      }
+    }
+    // Fallback for demo seed PIN 7788
+    if (verifyPin('7788', combined)) {
+      return '7788';
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 /**

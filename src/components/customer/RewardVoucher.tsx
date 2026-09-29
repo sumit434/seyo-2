@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../common/Button';
-import { staffApi } from '../../services/staffApi';
+import { customerService } from '../../services/customerService';
 import { Gift, CheckCircle, ShieldCheck, ArrowRight, Lock } from 'lucide-react';
 
 interface RewardVoucherProps {
@@ -12,6 +12,7 @@ interface RewardVoucherProps {
     claimedAt: string;
   };
   businessName: string;
+  businessId?: string;
   onRedeemed: () => void;
   onContinue: () => void;
 }
@@ -19,6 +20,7 @@ interface RewardVoucherProps {
 export const RewardVoucher: React.FC<RewardVoucherProps> = ({
   voucher,
   businessName,
+  businessId,
   onRedeemed,
   onContinue,
 }) => {
@@ -34,11 +36,16 @@ export const RewardVoucher: React.FC<RewardVoucherProps> = ({
       return;
     }
 
+    if (!businessId) {
+      setError('Business context missing. Please ask staff to redeem at terminal.');
+      return;
+    }
+
     setIsRedeeming(true);
     setError(null);
     try {
       // Call redemption endpoint with staff pin
-      await staffApi.redeemVoucher('ANONYMOUS_VERIFY', voucher.code, staffPin);
+      await customerService.redeemVoucher(businessId, voucher.code, staffPin);
       setIsRedeemed(true);
       onRedeemed();
     } catch (err: any) {

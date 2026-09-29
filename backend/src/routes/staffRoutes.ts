@@ -3,7 +3,7 @@ import QRCode from 'qrcode';
 import { StaffService } from '../services/staffService';
 import { MemoryDB } from '../db/MemoryDB';
 import { staffAuthMiddleware, AuthenticatedStaffRequest } from '../middleware/staffMiddleware';
-import { maskMobile } from '../utils/crypto';
+import { maskMobile, extractConfiguredPin } from '../utils/crypto';
 import { Offer } from '../../../shared/types/offer';
 
 const router = Router();
@@ -120,6 +120,7 @@ router.get('/terminal-data', staffAuthMiddleware, async (req: AuthenticatedStaff
         loyaltyReward: business.loyaltyReward,
         spinWheelConfiguration: business.spinWheelConfiguration,
         googleReviewUrl: business.googleReviewUrl,
+        configuredStaffPin: extractConfiguredPin(business.staffPinHash) || '••••',
       },
       offer: offer ? {
         id: offer.id,
@@ -138,6 +139,7 @@ router.get('/terminal-data', staffAuthMiddleware, async (req: AuthenticatedStaff
       loyaltyRecords,
       rewards,
       reviews,
+      offerHistory: staffService.getOfferHistory(business.id),
     });
   } catch (err) {
     next(err);
@@ -154,7 +156,12 @@ router.post('/redeem-voucher', staffAuthMiddleware, (req: AuthenticatedStaffRequ
       return res.status(400).json({ success: false, message: 'voucherCode and staffPin are required' });
     }
 
-    const result = staffService.redeemVoucher(businessId, voucherCode.trim(), staffPin.trim());
+    const cleanPin = String(staffPin).trim();
+    if (!/^\d{4}$/.test(cleanPin)) {
+      return res.status(400).json({ success: false, message: 'Staff verification PIN must be exactly 4 digits' });
+    }
+
+    const result = staffService.redeemVoucher(businessId, String(voucherCode).trim(), cleanPin);
     res.json({
       success: true,
       message: `Voucher ${result.reward.code} successfully redeemed for ${result.customerName}`,
@@ -165,23 +172,30 @@ router.post('/redeem-voucher', staffAuthMiddleware, (req: AuthenticatedStaffRequ
   }
 });
 
-// Cancel active offer (Immutability rule: active configuration cannot be edited, must be cancelled/completed)
-router.post('/cancel-offer', staffAuthMiddleware, (req: AuthenticatedStaffRequest, res: Response, next) => {
+// Delete / Deactivate active offer (preserves history, transitions offer status to cancelled)
+router.post(['/delete-offer', '/cancel-offer'], staffAuthMiddleware, (req: AuthenticatedStaffRequest, res: Response, next) => {
   try {
     const businessId = req.staffSession!.businessId;
-    const offer = db.getActiveOfferByBusinessId(businessId);
-    if (!offer) {
-      return res.status(404).json({ success: false, message: 'No active offer found to cancel' });
-    }
-
-    offer.status = 'cancelled';
-    offer.cancelledAt = new Date().toISOString();
-    db.saveOffer(offer);
+    const result = staffService.deleteActiveOffer(businessId);
 
     res.json({
       success: true,
-      message: 'Active offer has been cancelled. You may now launch a new offer.',
-      offer,
+      message: 'Active offer has been deactivated and archived in Offer History.',
+      offer: result.offer,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Get business offer history (Strictly business-scoped)
+router.get('/offer-history', staffAuthMiddleware, (req: AuthenticatedStaffRequest, res: Response, next) => {
+  try {
+    const businessId = req.staffSession!.businessId;
+    const offers = staffService.getOfferHistory(businessId);
+    res.json({
+      success: true,
+      offers,
     });
   } catch (err) {
     next(err);

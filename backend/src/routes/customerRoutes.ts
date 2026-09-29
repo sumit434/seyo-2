@@ -4,6 +4,7 @@ import { CustomerStatusService } from '../services/customerStatusService';
 import { SpinService } from '../services/spinService';
 import { LoyaltyService } from '../services/loyaltyService';
 import { ReviewService } from '../services/reviewService';
+import { StaffService } from '../services/staffService';
 import { maskMobile } from '../utils/crypto';
 import { TOP_RANKERS_LIMIT } from '../../../shared/constants/limits';
 
@@ -13,6 +14,7 @@ const statusService = new CustomerStatusService();
 const spinService = new SpinService();
 const loyaltyService = new LoyaltyService();
 const reviewService = new ReviewService();
+const staffService = new StaffService();
 
 // Helper to resolve customer from session token or query
 function getCustomerFromReq(req: Request) {
@@ -155,6 +157,28 @@ router.get('/top-rankers/:slug', (req: Request, res: Response, next) => {
       success: true,
       businessName: business.name,
       topRankers,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Customer screen on-site voucher redemption by staff PIN
+router.post('/voucher/redeem', (req: Request, res: Response, next) => {
+  try {
+    const { businessId, voucherCode, staffPin } = req.body;
+    if (!businessId || !voucherCode || !staffPin) {
+      return res.status(400).json({ success: false, message: 'businessId, voucherCode, and staffPin are required' });
+    }
+    const cleanPin = String(staffPin).trim();
+    if (!/^\d{4}$/.test(cleanPin)) {
+      return res.status(400).json({ success: false, message: 'Staff verification PIN must be exactly 4 digits' });
+    }
+    const result = staffService.redeemVoucher(businessId, String(voucherCode).trim(), cleanPin);
+    res.json({
+      success: true,
+      message: `Voucher ${result.reward.code} successfully redeemed for ${result.customerName}`,
+      reward: result.reward,
     });
   } catch (err) {
     next(err);
