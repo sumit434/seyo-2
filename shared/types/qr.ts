@@ -20,6 +20,7 @@ export type CustomerJourneyStage =
   | 'voucher'
   | 'loyalty'
   | 'loyalty_reward'
+  | 'check_condition'
   | 'review'
   | 'thank_you'
   | 'cooldown';
@@ -50,6 +51,11 @@ export interface CustomerStatusResponse {
     logoEmoji: string;
     logoUrl?: string;
     accentColor: string;
+    googleReviewUrl?: string;
+    googlePlaceId?: string;
+    zomatoUrl?: string;
+    swiggyUrl?: string;
+    instagramUrl?: string;
   };
   offer: {
     id: string;
@@ -73,6 +79,8 @@ export interface CustomerStatusResponse {
     mobileMasked: string;
     visitCount: number;
     totalVisits: number;
+    hasEnteredReviewFlow?: boolean;
+    reviewAcceleratorEntryId?: string;
     activeVoucher?: {
       rewardId: string;
       code: string;
@@ -94,6 +102,8 @@ export interface CustomerStatusResponse {
       type: 'spin' | 'loyalty';
     } | null;
     reviewJourneyCompleted: boolean;
+    hasEnteredReviewFlow?: boolean;
+    reviewAcceleratorEntryId?: string;
     currentStage: CustomerJourneyStage;
     isCooldown: boolean;
     cooldownMessage?: string;

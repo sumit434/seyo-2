@@ -18,6 +18,9 @@ export interface Customer {
   };
   reviewJourneyCompleted: boolean;
   reviewJourneyCompletedAt?: string;
+  hasEnteredReviewFlow?: boolean;
+  reviewAcceleratorEntryId?: string;
+  voucherDeferred?: boolean;
   createdAt: string;
   updatedAt: string;
 }

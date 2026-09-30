@@ -3,7 +3,7 @@ import { ALLOWED_COUNTRIES } from '../../../shared/constants/countries';
 import { OnboardingDraftData } from '../../../shared/types/onboarding';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
-import { ArrowRight, Globe, MapPin, Building2, Tag } from 'lucide-react';
+import { ArrowRight, Globe, MapPin, Building2, Tag, Share2, Instagram } from 'lucide-react';
 
 interface ProfileStepProps {
   initialData: OnboardingDraftData;
@@ -29,6 +29,9 @@ export const ProfileStep: React.FC<ProfileStepProps> = ({ initialData, onNext, i
   const [category, setCategory] = useState(initialData.category || CATEGORIES[0]);
   const [country, setCountry] = useState(initialData.country || ALLOWED_COUNTRIES[0].name);
   const [city, setCity] = useState(initialData.city || '');
+  const [zomatoUrl, setZomatoUrl] = useState(initialData.zomatoUrl || '');
+  const [swiggyUrl, setSwiggyUrl] = useState(initialData.swiggyUrl || '');
+  const [instagramUrl, setInstagramUrl] = useState(initialData.instagramUrl || '');
   
   // Find selected country config
   const selectedCountryConfig = ALLOWED_COUNTRIES.find(c => c.name === country) || ALLOWED_COUNTRIES[0];
@@ -69,6 +72,9 @@ export const ProfileStep: React.FC<ProfileStepProps> = ({ initialData, onNext, i
       country,
       city: city.trim(),
       timezone,
+      zomatoUrl: zomatoUrl.trim() || undefined,
+      swiggyUrl: swiggyUrl.trim() || undefined,
+      instagramUrl: instagramUrl.trim() || undefined,
     });
   };
 
@@ -167,6 +173,46 @@ export const ProfileStep: React.FC<ProfileStepProps> = ({ initialData, onNext, i
           <p className="text-xs text-[#6a787e] mt-1">
             All customer spin cooldowns and daily loyalty stamp limits calculate against this timezone.
           </p>
+        </div>
+
+        {/* Social & Delivery Hyperlinks (Optional) */}
+        <div className="pt-2 border-t border-[#e2e7e6] space-y-3">
+          <div className="flex items-center gap-2">
+            <Share2 className="w-4 h-4 text-[#0e7c66]" />
+            <h3 className="text-sm font-bold text-[#10181c] uppercase tracking-wider">
+              Social & Delivery Links (Optional)
+            </h3>
+          </div>
+          <p className="text-xs text-[#6a787e]">
+            If provided, verified brand icons will appear on your customer cooldown page for guests to follow and order. Leave blank if not applicable.
+          </p>
+
+          <div className="grid grid-cols-1 gap-3">
+            <Input
+              label="Zomato Profile / Store Link"
+              placeholder="https://www.zomato.com/your-restaurant"
+              value={zomatoUrl}
+              onChange={e => setZomatoUrl(e.target.value)}
+              helperText="Displays a Zomato icon on customer cooldown screen"
+            />
+
+            <Input
+              label="Swiggy Store Link"
+              placeholder="https://www.swiggy.com/restaurants/your-restaurant"
+              value={swiggyUrl}
+              onChange={e => setSwiggyUrl(e.target.value)}
+              helperText="Displays a Swiggy icon on customer cooldown screen"
+            />
+
+            <Input
+              label="Instagram Profile Link"
+              placeholder="https://instagram.com/yourbrand"
+              value={instagramUrl}
+              onChange={e => setInstagramUrl(e.target.value)}
+              leftAddon={<Instagram className="w-4 h-4 text-pink-600" />}
+              helperText="Displays an Instagram icon on customer cooldown screen"
+            />
+          </div>
         </div>
       </div>
 

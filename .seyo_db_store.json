@@ -1,0 +1,1276 @@
+{
+  "savedAt": "2026-09-30T11:09:40.042Z",
+  "businesses": [
+    {
+      "id": "biz_bella_napoli",
+      "name": "Bella Napoli Pizzeria",
+      "slug": "bella-napoli",
+      "email": "owner@bellanapoli.com",
+      "passwordHash": "6c57cb72fde396f82f07d0f4ae7bce89:fb0ff8f9f8f90682efbabdf252174658cef4d24295a5c900b67ebb0a14d69203",
+      "staffPinHash": "9dd4c30c60d47fec19baca5151cde27e:9183aa93da5dd0eeeab8f01cf7a56fd6070383911477be3ba2c272e6aa770edb:97c111feba6d3a77fbb110ea:d7962a0ef0e9f95f7925f16dc43416d4:f806e3a4",
+      "tier": "combined",
+      "timezone": "America/New_York",
+      "country": "United States",
+      "city": "New York",
+      "category": "Restaurant & Bar",
+      "googleReviewUrl": "https://maps.google.com/?q=Bella+Napoli+Pizza+NY",
+      "googlePlaceId": "ChIJN1t_tDeuEmsRUsoyG83frY4",
+      "zomatoUrl": "https://www.zomato.com/new-york-city/bella-napoli",
+      "swiggyUrl": "https://www.swiggy.com/restaurants/bella-napoli-pizzeria",
+      "instagramUrl": "https://www.instagram.com/bellanapolipizza",
+      "loyaltyTarget": 6,
+      "loyaltyValidationDays": 45,
+      "loyaltyReward": "Free Wood-Fired Margherita Pizza",
+      "spinWheelConfiguration": [
+        {
+          "id": "s1",
+          "rewardLabel": "15% Off Your Entire Bill",
+          "emoji": "🍕",
+          "weight": 25
+        },
+        {
+          "id": "s2",
+          "rewardLabel": "Free Artisanal Gelato Cup",
+          "emoji": "🍨",
+          "weight": 20
+        },
+        {
+          "id": "s3",
+          "rewardLabel": "Free Garlic Knots Basket",
+          "emoji": "🥖",
+          "weight": 20
+        },
+        {
+          "id": "s4",
+          "rewardLabel": "Complimentary Soft Beverage",
+          "emoji": "🥤",
+          "weight": 15
+        },
+        {
+          "id": "s5",
+          "rewardLabel": "Free Italian Tiramisu Slice",
+          "emoji": "🍰",
+          "weight": 10
+        },
+        {
+          "id": "s6",
+          "rewardLabel": "Chef Special VIP Tasting Plate",
+          "emoji": "⭐",
+          "weight": 10
+        }
+      ],
+      "active": true,
+      "logoEmoji": "🍕",
+      "accentColor": "#0e7c66",
+      "onboardingStep": "completed",
+      "createdAt": "2026-08-31T10:24:19.228Z",
+      "updatedAt": "2026-09-30T10:24:19.228Z"
+    },
+    {
+      "id": "biz_tokyo_ramen",
+      "name": "Tokyo Ramen Lab",
+      "slug": "tokyo-ramen",
+      "email": "lab@tokyoramen.jp",
+      "passwordHash": "6c57cb72fde396f82f07d0f4ae7bce89:fb0ff8f9f8f90682efbabdf252174658cef4d24295a5c900b67ebb0a14d69203",
+      "staffPinHash": "9dd4c30c60d47fec19baca5151cde27e:9183aa93da5dd0eeeab8f01cf7a56fd6070383911477be3ba2c272e6aa770edb:97c111feba6d3a77fbb110ea:d7962a0ef0e9f95f7925f16dc43416d4:f806e3a4",
+      "tier": "spin",
+      "timezone": "Asia/Tokyo",
+      "country": "Japan",
+      "city": "Tokyo",
+      "category": "Ramen & Noodles",
+      "spinWheelConfiguration": [
+        {
+          "id": "tr1",
+          "rewardLabel": "Extra Chashu Slice Topping",
+          "emoji": "🍜",
+          "weight": 30
+        },
+        {
+          "id": "tr2",
+          "rewardLabel": "Complimentary Ajitsuke Tamago (Egg)",
+          "emoji": "⭐",
+          "weight": 25
+        },
+        {
+          "id": "tr3",
+          "rewardLabel": "Free Side of Gyoza (4 pcs)",
+          "emoji": "🥟",
+          "weight": 20
+        },
+        {
+          "id": "tr4",
+          "rewardLabel": "Free Iced Oolong Tea",
+          "emoji": "🍵",
+          "weight": 15
+        },
+        {
+          "id": "tr5",
+          "rewardLabel": "Full Bowl Ramen Upgrade",
+          "emoji": "🏆",
+          "weight": 10
+        }
+      ],
+      "active": true,
+      "logoEmoji": "🍜",
+      "accentColor": "#d97706",
+      "onboardingStep": "completed",
+      "createdAt": "2026-09-15T10:24:19.228Z",
+      "updatedAt": "2026-09-30T10:24:19.228Z",
+      "googleReviewUrl": "https://maps.google.com/?q=Tokyo%2BRamen%2BLab"
+    },
+    {
+      "id": "biz_683ee8bd43e543ee",
+      "name": "don",
+      "slug": "don",
+      "email": "don@gmail.com",
+      "passwordHash": "92f8f22af4cefd94a6a441134a3b847f:090bb4e3151361b535df70c7575ef5375568553526ad872a6b906d995bc1d511",
+      "staffPinHash": "1496d6827c56ce9a25d7875bb4d3aaa0:a3158274d7173069a95f714af2c84b5fe9f1864df7ad2c1df519a5de8c741cfa:f8e081eb73b91e7040ba3a33:1e5065aef972011124316c36ec44f3e3:e914f63d",
+      "tier": "loyalty",
+      "timezone": "Asia/Kolkata",
+      "country": "India",
+      "city": "Mumbai, Maharashtra, IND",
+      "category": "Restaurant & Dining",
+      "zomatoUrl": "https://www.instagram.com/zomato/",
+      "instagramUrl": "https://www.instagram.com/molaeats/",
+      "loyaltyTarget": 6,
+      "loyaltyValidationDays": 60,
+      "loyaltyReward": "Free Specialty Entree or Gift",
+      "active": true,
+      "logoEmoji": "🏪",
+      "accentColor": "#0e7c66",
+      "onboardingStep": "completed",
+      "createdAt": "2026-09-30T10:41:20.911Z",
+      "updatedAt": "2026-09-30T10:41:20.911Z",
+      "googleReviewUrl": "https://maps.google.com/?q=don"
+    },
+    {
+      "id": "biz_7ae1f04687e60239",
+      "name": "don2",
+      "slug": "don2",
+      "email": "don@gmail.com",
+      "passwordHash": "37a477744328f152953cdf6ab4b589fb:6c52c0ad2e65ace4e61033dc09f169f77a24ac7e1e243d9435c793101b4d6aad",
+      "staffPinHash": "eaaa28d9f4e9577b561dabb809bfde5b:89d4756d0e93708b2a9cfed56517ffee98dcb4e8bef4c27385d686b7259dad51:e1250b04bb1cb1c0e27073a6:210c422857c2604c3965b8269d83e837:d2a16cf1",
+      "tier": "combined",
+      "timezone": "Asia/Kolkata",
+      "country": "India",
+      "city": "mumbai",
+      "category": "Restaurant & Dining",
+      "googleReviewUrl": "https://maps.google.com/?q=Your+Business+Name",
+      "zomatoUrl": "https://www.instagram.com/zomato/",
+      "instagramUrl": "https://www.instagram.com/molaeats/",
+      "loyaltyTarget": 6,
+      "loyaltyValidationDays": 60,
+      "loyaltyReward": "Free Specialty Entree or Gift",
+      "spinWheelConfiguration": [
+        {
+          "id": "s1",
+          "rewardLabel": "10% Off Your Purchase",
+          "emoji": "🎁",
+          "weight": 35
+        },
+        {
+          "id": "s2",
+          "rewardLabel": "Free Beverage Upgrade",
+          "emoji": "☕",
+          "weight": 35
+        },
+        {
+          "id": "s3",
+          "rewardLabel": "Chef Signature Dessert",
+          "emoji": "🍰",
+          "weight": 20
+        },
+        {
+          "id": "s4",
+          "rewardLabel": "VIP Grand Mystery Prize",
+          "emoji": "⭐",
+          "weight": 10
+        }
+      ],
+      "active": true,
+      "logoEmoji": "🏪",
+      "accentColor": "#0e7c66",
+      "onboardingStep": "completed",
+      "createdAt": "2026-09-30T10:47:07.885Z",
+      "updatedAt": "2026-09-30T10:47:07.885Z"
+    },
+    {
+      "id": "biz_28b207c5db2bdaa0",
+      "name": "don3",
+      "slug": "don3",
+      "email": "don@gmail.com",
+      "passwordHash": "d17107b7653f71a0c6bc042fe7de3e8a:4289f38d1b2b3cd438c18f6db7a869418c43b5a4d165eda678a98232988e48ff",
+      "staffPinHash": "97050c2c4caf21664e0af94c365848f7:cda67a8a6bad1ceef52add47f9a11be668c6bc4ef67eac9c7ee5c23b40783d31:2b8e7ff4675cd37a129a94b1:fbc12545df5483458aa4aaa69d05a72a:e3a33508",
+      "tier": "loyalty",
+      "timezone": "Asia/Kolkata",
+      "country": "India",
+      "city": "mumbai",
+      "category": "Restaurant & Dining",
+      "zomatoUrl": "https://www.instagram.com/zomato/",
+      "instagramUrl": "https://www.instagram.com/molaeats/",
+      "loyaltyTarget": 6,
+      "loyaltyValidationDays": 60,
+      "loyaltyReward": "Free Specialty Entree or Gift",
+      "active": true,
+      "logoEmoji": "🏪",
+      "accentColor": "#0e7c66",
+      "onboardingStep": "completed",
+      "createdAt": "2026-09-30T10:47:53.256Z",
+      "updatedAt": "2026-09-30T10:47:53.256Z",
+      "googleReviewUrl": "https://maps.google.com/?q=don3"
+    }
+  ],
+  "offers": [
+    {
+      "id": "off_bella_combined",
+      "businessId": "biz_bella_napoli",
+      "title": "Spring Loyalty & Dining Fiesta",
+      "description": "Spin for instant treats, earn stamps toward your free Margherita pizza, and share your experience!",
+      "tier": "combined",
+      "status": "active",
+      "createdAt": "2026-08-31T10:24:19.228Z",
+      "activatedAt": "2026-08-31T10:24:19.228Z",
+      "durationDays": 90,
+      "spinWheelConfiguration": [
+        {
+          "id": "s1",
+          "rewardLabel": "15% Off Your Entire Bill",
+          "emoji": "🍕",
+          "weight": 25
+        },
+        {
+          "id": "s2",
+          "rewardLabel": "Free Artisanal Gelato Cup",
+          "emoji": "🍨",
+          "weight": 20
+        },
+        {
+          "id": "s3",
+          "rewardLabel": "Free Garlic Knots Basket",
+          "emoji": "🥖",
+          "weight": 20
+        },
+        {
+          "id": "s4",
+          "rewardLabel": "Complimentary Soft Beverage",
+          "emoji": "🥤",
+          "weight": 15
+        },
+        {
+          "id": "s5",
+          "rewardLabel": "Free Italian Tiramisu Slice",
+          "emoji": "🍰",
+          "weight": 10
+        },
+        {
+          "id": "s6",
+          "rewardLabel": "Chef Special VIP Tasting Plate",
+          "emoji": "⭐",
+          "weight": 10
+        }
+      ],
+      "loyaltyTarget": 6,
+      "loyaltyValidationDays": 45,
+      "loyaltyReward": "Free Wood-Fired Margherita Pizza",
+      "googleReviewUrl": "https://maps.google.com/?q=Bella+Napoli+Pizza+NY",
+      "metrics": {
+        "scans": 142,
+        "identifiedGuests": 89,
+        "rewardsIssued": 54,
+        "rewardsRedeemed": 38,
+        "reviewsPrompted": 45,
+        "reviewsPersisted": 42,
+        "loyaltyStampsIssued": 98,
+        "loyaltyMilestonesClaimed": 11
+      }
+    },
+    {
+      "id": "off_tokyo_spin",
+      "businessId": "biz_tokyo_ramen",
+      "title": "Tokyo Slurp & Spin Wheel",
+      "description": "Every bowl earns a lucky spin! 100% all-win guaranteed upgrades.",
+      "tier": "spin",
+      "status": "active",
+      "createdAt": "2026-09-15T10:24:19.228Z",
+      "activatedAt": "2026-09-15T10:24:19.228Z",
+      "durationDays": 60,
+      "spinWheelConfiguration": [
+        {
+          "id": "tr1",
+          "rewardLabel": "Extra Chashu Slice Topping",
+          "emoji": "🍜",
+          "weight": 30
+        },
+        {
+          "id": "tr2",
+          "rewardLabel": "Complimentary Ajitsuke Tamago (Egg)",
+          "emoji": "⭐",
+          "weight": 25
+        },
+        {
+          "id": "tr3",
+          "rewardLabel": "Free Side of Gyoza (4 pcs)",
+          "emoji": "🥟",
+          "weight": 20
+        },
+        {
+          "id": "tr4",
+          "rewardLabel": "Free Iced Oolong Tea",
+          "emoji": "🍵",
+          "weight": 15
+        },
+        {
+          "id": "tr5",
+          "rewardLabel": "Full Bowl Ramen Upgrade",
+          "emoji": "🏆",
+          "weight": 10
+        }
+      ],
+      "metrics": {
+        "scans": 108,
+        "identifiedGuests": 73,
+        "rewardsIssued": 77,
+        "rewardsRedeemed": 65,
+        "reviewsPrompted": 0,
+        "reviewsPersisted": 0,
+        "loyaltyStampsIssued": 0,
+        "loyaltyMilestonesClaimed": 0
+      },
+      "googleReviewUrl": "https://maps.google.com/?q=Tokyo%2BRamen%2BLab"
+    },
+    {
+      "id": "off_4d85146e199b463e",
+      "businessId": "biz_683ee8bd43e543ee",
+      "title": "don Grand Engagement Campaign",
+      "description": "Official LOYALTY experience for don",
+      "tier": "loyalty",
+      "status": "active",
+      "createdAt": "2026-09-30T10:41:20.911Z",
+      "activatedAt": "2026-09-30T10:41:20.911Z",
+      "durationDays": 365,
+      "loyaltyTarget": 6,
+      "loyaltyValidationDays": 60,
+      "loyaltyReward": "Free Specialty Entree or Gift",
+      "metrics": {
+        "scans": 3,
+        "identifiedGuests": 0,
+        "rewardsIssued": 0,
+        "rewardsRedeemed": 0,
+        "reviewsPrompted": 0,
+        "reviewsPersisted": 0,
+        "loyaltyStampsIssued": 1,
+        "loyaltyMilestonesClaimed": 0
+      },
+      "googleReviewUrl": "https://maps.google.com/?q=don"
+    },
+    {
+      "id": "off_364f52268c9b0e3f",
+      "businessId": "biz_7ae1f04687e60239",
+      "title": "don2 Grand Engagement Campaign",
+      "description": "Official COMBINED experience for don2",
+      "tier": "combined",
+      "status": "active",
+      "createdAt": "2026-09-30T10:47:07.885Z",
+      "activatedAt": "2026-09-30T10:47:07.885Z",
+      "durationDays": 365,
+      "spinWheelConfiguration": [
+        {
+          "id": "s1",
+          "rewardLabel": "10% Off Your Purchase",
+          "emoji": "🎁",
+          "weight": 35
+        },
+        {
+          "id": "s2",
+          "rewardLabel": "Free Beverage Upgrade",
+          "emoji": "☕",
+          "weight": 35
+        },
+        {
+          "id": "s3",
+          "rewardLabel": "Chef Signature Dessert",
+          "emoji": "🍰",
+          "weight": 20
+        },
+        {
+          "id": "s4",
+          "rewardLabel": "VIP Grand Mystery Prize",
+          "emoji": "⭐",
+          "weight": 10
+        }
+      ],
+      "loyaltyTarget": 6,
+      "loyaltyValidationDays": 60,
+      "loyaltyReward": "Free Specialty Entree or Gift",
+      "googleReviewUrl": "https://maps.google.com/?q=Your+Business+Name",
+      "metrics": {
+        "scans": 0,
+        "identifiedGuests": 0,
+        "rewardsIssued": 0,
+        "rewardsRedeemed": 0,
+        "reviewsPrompted": 0,
+        "reviewsPersisted": 0,
+        "loyaltyStampsIssued": 0,
+        "loyaltyMilestonesClaimed": 0
+      }
+    },
+    {
+      "id": "off_33fceacb5fbba46e",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "title": "don3 Grand Engagement Campaign",
+      "description": "Official LOYALTY experience for don3",
+      "tier": "loyalty",
+      "status": "active",
+      "createdAt": "2026-09-30T10:47:53.256Z",
+      "activatedAt": "2026-09-30T10:47:53.256Z",
+      "durationDays": 365,
+      "loyaltyTarget": 6,
+      "loyaltyValidationDays": 60,
+      "loyaltyReward": "Free Specialty Entree or Gift",
+      "metrics": {
+        "scans": 3,
+        "identifiedGuests": 0,
+        "rewardsIssued": 0,
+        "rewardsRedeemed": 0,
+        "reviewsPrompted": 0,
+        "reviewsPersisted": 0,
+        "loyaltyStampsIssued": 1,
+        "loyaltyMilestonesClaimed": 0
+      },
+      "googleReviewUrl": "https://maps.google.com/?q=don3"
+    }
+  ],
+  "customers": [
+    {
+      "id": "cust_marco",
+      "businessId": "biz_bella_napoli",
+      "mobile": "+15552345678",
+      "name": "Marco Rossi",
+      "visitCount": 5,
+      "totalVisits": 28,
+      "lastVisitAt": "2026-09-28T10:24:19.228Z",
+      "totalRewardsClaimed": 4,
+      "lastSpinAt": "2026-09-28T10:24:19.228Z",
+      "totalSpins": 14,
+      "reviewJourneyCompleted": false,
+      "reviewJourneyCompletedAt": "2026-09-20T10:24:19.228Z",
+      "createdAt": "2026-08-01T10:24:19.228Z",
+      "updatedAt": "2026-09-30T10:24:19.228Z"
+    },
+    {
+      "id": "cust_sarah",
+      "businessId": "biz_bella_napoli",
+      "mobile": "+15553456789",
+      "name": "Sarah Jenkins",
+      "visitCount": 4,
+      "totalVisits": 22,
+      "lastVisitAt": "2026-09-27T10:24:19.228Z",
+      "totalRewardsClaimed": 3,
+      "lastSpinAt": "2026-09-27T10:24:19.228Z",
+      "totalSpins": 12,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-08-11T10:24:19.228Z",
+      "updatedAt": "2026-09-30T10:24:19.228Z"
+    },
+    {
+      "id": "cust_alex",
+      "businessId": "biz_bella_napoli",
+      "mobile": "+15554567890",
+      "name": "Alex Chen",
+      "visitCount": 3,
+      "totalVisits": 17,
+      "lastVisitAt": "2026-09-25T10:24:19.228Z",
+      "totalRewardsClaimed": 2,
+      "totalSpins": 9,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-08-21T10:24:19.228Z",
+      "updatedAt": "2026-09-30T10:24:19.228Z"
+    },
+    {
+      "id": "cust_elena",
+      "businessId": "biz_bella_napoli",
+      "mobile": "+15555678901",
+      "name": "Elena Rostova",
+      "visitCount": 2,
+      "totalVisits": 12,
+      "lastVisitAt": "2026-09-23T10:24:19.228Z",
+      "totalRewardsClaimed": 1,
+      "totalSpins": 6,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-08-26T10:24:19.228Z",
+      "updatedAt": "2026-09-30T10:24:19.228Z"
+    },
+    {
+      "id": "cust_david",
+      "businessId": "biz_bella_napoli",
+      "mobile": "+15556789012",
+      "name": "David Miller",
+      "visitCount": 1,
+      "totalVisits": 8,
+      "lastVisitAt": "2026-09-18T10:24:19.228Z",
+      "totalRewardsClaimed": 1,
+      "totalSpins": 4,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-08-31T10:24:19.228Z",
+      "updatedAt": "2026-09-30T10:24:19.228Z"
+    },
+    {
+      "id": "cust_d1d9e5a297ab74f3",
+      "businessId": "biz_tokyo_ramen",
+      "mobile": "+917021127377",
+      "name": "sumit",
+      "visitCount": 0,
+      "totalVisits": 0,
+      "totalRewardsClaimed": 0,
+      "totalSpins": 1,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-09-30T10:38:30.394Z",
+      "updatedAt": "2026-09-30T10:38:42.556Z",
+      "lastSpinAt": "2026-09-30T10:38:34.593Z"
+    },
+    {
+      "id": "cust_12efd819ce9b6b99",
+      "businessId": "biz_tokyo_ramen",
+      "mobile": "+91000000001",
+      "name": "sumit",
+      "visitCount": 0,
+      "totalVisits": 0,
+      "totalRewardsClaimed": 0,
+      "totalSpins": 1,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-09-30T10:39:11.079Z",
+      "updatedAt": "2026-09-30T10:39:21.730Z",
+      "lastSpinAt": "2026-09-30T10:39:14.435Z"
+    },
+    {
+      "id": "cust_dba0f6729b81b8a2",
+      "businessId": "biz_tokyo_ramen",
+      "mobile": "+910000000012",
+      "name": "sumit",
+      "visitCount": 0,
+      "totalVisits": 0,
+      "totalRewardsClaimed": 0,
+      "totalSpins": 1,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-09-30T10:39:45.396Z",
+      "updatedAt": "2026-09-30T10:39:55.447Z",
+      "lastSpinAt": "2026-09-30T10:39:48.001Z"
+    },
+    {
+      "id": "cust_35dc1b96f0574b64",
+      "businessId": "biz_683ee8bd43e543ee",
+      "mobile": "+917021127377",
+      "name": "sumit",
+      "visitCount": 1,
+      "totalVisits": 1,
+      "totalRewardsClaimed": 0,
+      "totalSpins": 0,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-09-30T10:41:39.912Z",
+      "updatedAt": "2026-09-30T10:41:43.644Z",
+      "lastVisitAt": "2026-09-30T10:41:43.644Z"
+    },
+    {
+      "id": "cust_69b84f9c12d1492f",
+      "businessId": "biz_tokyo_ramen",
+      "mobile": "+910000000016",
+      "name": "sumit",
+      "visitCount": 0,
+      "totalVisits": 0,
+      "totalRewardsClaimed": 0,
+      "totalSpins": 1,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-09-30T10:45:53.437Z",
+      "updatedAt": "2026-09-30T10:46:04.663Z",
+      "lastSpinAt": "2026-09-30T10:45:56.803Z"
+    },
+    {
+      "id": "cust_812f5b6ec066394d",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "mobile": "+917021127377",
+      "name": "sumit",
+      "visitCount": 1,
+      "totalVisits": 1,
+      "totalRewardsClaimed": 0,
+      "totalSpins": 0,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-09-30T10:48:15.633Z",
+      "updatedAt": "2026-09-30T10:48:19.366Z",
+      "lastVisitAt": "2026-09-30T10:48:19.366Z"
+    }
+  ],
+  "rewards": [
+    {
+      "id": "rew_sample_voucher_1",
+      "businessId": "biz_bella_napoli",
+      "customerId": "cust_marco",
+      "customerName": "Marco Rossi",
+      "customerMobileMasked": "******5678",
+      "code": "SY-MARCO9",
+      "title": "15% Off Your Entire Bill",
+      "type": "spin",
+      "status": "issued",
+      "claimedAt": "2026-09-30T09:54:19.228Z"
+    },
+    {
+      "id": "rew_sample_redeemed_1",
+      "businessId": "biz_bella_napoli",
+      "customerId": "cust_sarah",
+      "customerName": "Sarah Jenkins",
+      "customerMobileMasked": "******6789",
+      "code": "SY-SARAH3",
+      "title": "Free Wood-Fired Margherita Pizza",
+      "type": "loyalty",
+      "status": "redeemed",
+      "claimedAt": "2026-09-28T10:24:19.228Z",
+      "redeemedAt": "2026-09-28T10:39:19.228Z",
+      "staffPinVerifiedBy": "Staff Terminal NY"
+    },
+    {
+      "id": "rew_b193cafb6eaa8337",
+      "businessId": "biz_tokyo_ramen",
+      "customerId": "cust_d1d9e5a297ab74f3",
+      "customerName": "sumit",
+      "customerMobileMasked": "******7377",
+      "code": "SY-R8S3Y",
+      "title": "Free Iced Oolong Tea",
+      "type": "spin",
+      "status": "redeemed",
+      "claimedAt": "2026-09-30T10:38:34.593Z",
+      "redeemedAt": "2026-09-30T10:38:42.556Z",
+      "staffPinVerifiedBy": "Staff Terminal (Tokyo Ramen Lab)"
+    },
+    {
+      "id": "rew_8930bdc79aa85eaa",
+      "businessId": "biz_tokyo_ramen",
+      "customerId": "cust_12efd819ce9b6b99",
+      "customerName": "sumit",
+      "customerMobileMasked": "******0001",
+      "code": "SY-G5NPU",
+      "title": "Extra Chashu Slice Topping",
+      "type": "spin",
+      "status": "redeemed",
+      "claimedAt": "2026-09-30T10:39:14.435Z",
+      "redeemedAt": "2026-09-30T10:39:21.730Z",
+      "staffPinVerifiedBy": "Staff Terminal (Tokyo Ramen Lab)"
+    },
+    {
+      "id": "rew_e50124f07e7a86a5",
+      "businessId": "biz_tokyo_ramen",
+      "customerId": "cust_dba0f6729b81b8a2",
+      "customerName": "sumit",
+      "customerMobileMasked": "******0012",
+      "code": "SY-RMWRN",
+      "title": "Free Side of Gyoza (4 pcs)",
+      "type": "spin",
+      "status": "redeemed",
+      "claimedAt": "2026-09-30T10:39:48.001Z",
+      "redeemedAt": "2026-09-30T10:39:55.447Z",
+      "staffPinVerifiedBy": "Staff Terminal (Tokyo Ramen Lab)"
+    },
+    {
+      "id": "rew_d7f0c55fcc5c288f",
+      "businessId": "biz_tokyo_ramen",
+      "customerId": "cust_69b84f9c12d1492f",
+      "customerName": "sumit",
+      "customerMobileMasked": "******0016",
+      "code": "SY-TKRRJ",
+      "title": "Free Iced Oolong Tea",
+      "type": "spin",
+      "status": "redeemed",
+      "claimedAt": "2026-09-30T10:45:56.803Z",
+      "redeemedAt": "2026-09-30T10:46:04.663Z",
+      "staffPinVerifiedBy": "Staff Terminal (Tokyo Ramen Lab)"
+    }
+  ],
+  "reviewLogs": [
+    {
+      "id": "rev_sample_1",
+      "businessId": "biz_bella_napoli",
+      "customerId": "cust_marco",
+      "customerName": "Marco Rossi",
+      "reviewText": "Outstanding wood-fired crust! The staff is incredibly friendly and welcoming.",
+      "rating": 5,
+      "tags": [
+        "Great Service",
+        "Delicious Pizza",
+        "Authentic Taste"
+      ],
+      "createdAt": "2026-09-20T10:24:19.228Z",
+      "googleReviewOpenedAt": "2026-09-20T10:24:23.228Z",
+      "status": "google_opened"
+    }
+  ],
+  "merchantEntries": [
+    {
+      "id": "entry_bella_qr",
+      "businessId": "biz_bella_napoli",
+      "businessSlug": "bella-napoli",
+      "entryType": "merchant_qr",
+      "label": "Main Counter Printed QR",
+      "permanentCode": "BN-QR-COUNTER",
+      "targetTier": "combined",
+      "createdAt": "2026-09-30T10:24:19.228Z"
+    },
+    {
+      "id": "entry_bella_nfc",
+      "businessId": "biz_bella_napoli",
+      "businessSlug": "bella-napoli",
+      "entryType": "nfc_tag",
+      "label": "Table 10 Tap NFC Disk",
+      "permanentCode": "BN-NFC-T10",
+      "targetTier": "combined",
+      "createdAt": "2026-09-30T10:24:19.228Z"
+    },
+    {
+      "id": "entry_bella_instant_loyalty",
+      "businessId": "biz_bella_napoli",
+      "businessSlug": "bella-napoli",
+      "entryType": "instant_loyalty",
+      "label": "Express Loyalty Scan Card",
+      "permanentCode": "BN-LOYALTY-EXPRESS",
+      "targetTier": "combined",
+      "createdAt": "2026-09-30T10:24:19.228Z"
+    },
+    {
+      "id": "entry_tokyo_qr",
+      "businessId": "biz_tokyo_ramen",
+      "businessSlug": "tokyo-ramen",
+      "entryType": "merchant_qr",
+      "label": "Counter QR Card",
+      "permanentCode": "TR-QR-MAIN",
+      "targetTier": "spin",
+      "createdAt": "2026-09-30T10:24:19.228Z"
+    },
+    {
+      "id": "entry_qr_aeb9f6704873",
+      "businessId": "biz_683ee8bd43e543ee",
+      "businessSlug": "don",
+      "entryType": "merchant_qr",
+      "label": "Main Counter QR",
+      "permanentCode": "DON-QR",
+      "targetTier": "loyalty",
+      "createdAt": "2026-09-30T10:41:20.911Z"
+    },
+    {
+      "id": "entry_nfc_f82d5002a06b",
+      "businessId": "biz_683ee8bd43e543ee",
+      "businessSlug": "don",
+      "entryType": "nfc_tag",
+      "label": "Physical NFC Tag",
+      "permanentCode": "DON-NFC",
+      "targetTier": "loyalty",
+      "createdAt": "2026-09-30T10:41:20.911Z"
+    },
+    {
+      "id": "entry_qr_d94db18ae745",
+      "businessId": "biz_7ae1f04687e60239",
+      "businessSlug": "don2",
+      "entryType": "merchant_qr",
+      "label": "Main Counter QR",
+      "permanentCode": "DON2-QR",
+      "targetTier": "combined",
+      "createdAt": "2026-09-30T10:47:07.885Z"
+    },
+    {
+      "id": "entry_nfc_c1549049d69f",
+      "businessId": "biz_7ae1f04687e60239",
+      "businessSlug": "don2",
+      "entryType": "nfc_tag",
+      "label": "Physical NFC Tag",
+      "permanentCode": "DON2-NFC",
+      "targetTier": "combined",
+      "createdAt": "2026-09-30T10:47:07.885Z"
+    },
+    {
+      "id": "entry_loyalty_177e4e286e90",
+      "businessId": "biz_7ae1f04687e60239",
+      "businessSlug": "don2",
+      "entryType": "instant_loyalty",
+      "label": "Express Loyalty Tag",
+      "permanentCode": "DON2-LOYALTY",
+      "targetTier": "combined",
+      "createdAt": "2026-09-30T10:47:07.885Z"
+    },
+    {
+      "id": "entry_qr_58f5fd6fc2dc",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "businessSlug": "don3",
+      "entryType": "merchant_qr",
+      "label": "Main Counter QR",
+      "permanentCode": "DON3-QR",
+      "targetTier": "loyalty",
+      "createdAt": "2026-09-30T10:47:53.256Z"
+    },
+    {
+      "id": "entry_nfc_f43a7f98e101",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "businessSlug": "don3",
+      "entryType": "nfc_tag",
+      "label": "Physical NFC Tag",
+      "permanentCode": "DON3-NFC",
+      "targetTier": "loyalty",
+      "createdAt": "2026-09-30T10:47:53.256Z"
+    }
+  ],
+  "customerSessions": [
+    {
+      "sessionId": "cs_b62db41d626934d7",
+      "sessionToken": "ec6a2a61c7ca8bb754a9af6754241507e7cbbb5fe0d6e691386aa8bc509dfa45",
+      "businessId": "biz_tokyo_ramen",
+      "offerId": "off_tokyo_spin",
+      "customerId": "cust_dba0f6729b81b8a2",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:39:45.396Z",
+      "expiresAt": "2026-09-30T11:09:45.396Z"
+    },
+    {
+      "sessionId": "cs_298b0e8f4522edd9",
+      "sessionToken": "dc2ceb8cc79c0d23048e1b2d04784d6bd9302ec4c338b6b2baeea64d64ddf6f3",
+      "businessId": "biz_tokyo_ramen",
+      "offerId": "off_tokyo_spin",
+      "customerId": "cust_dba0f6729b81b8a2",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:39:47.107Z",
+      "expiresAt": "2026-09-30T11:09:47.107Z"
+    },
+    {
+      "sessionId": "cs_1cec5824b35bedde",
+      "sessionToken": "3850f9030475c22e03468158cd14a30508768cc7434f590fa850f7b610006865",
+      "businessId": "biz_tokyo_ramen",
+      "offerId": "off_tokyo_spin",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:39:56.435Z",
+      "expiresAt": "2026-09-30T11:09:56.435Z"
+    },
+    {
+      "sessionId": "cs_21d62ef418047e0e",
+      "sessionToken": "48d8f60dc9b9bcac81649117f52e7a403f55eded63e1a6fd1f63cdf23cca7afa",
+      "businessId": "biz_tokyo_ramen",
+      "offerId": "off_tokyo_spin",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:39:58.027Z",
+      "expiresAt": "2026-09-30T11:09:58.027Z"
+    },
+    {
+      "sessionId": "cs_0e80722acba5ca21",
+      "sessionToken": "dd0c4a306c7c0f9370354b38ccfe6bb77925f0d5954fa7dae30e28964c385d64",
+      "businessId": "biz_683ee8bd43e543ee",
+      "offerId": "off_4d85146e199b463e",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:41:29.932Z",
+      "expiresAt": "2026-09-30T11:11:29.932Z"
+    },
+    {
+      "sessionId": "cs_5a9fdb44fef15360",
+      "sessionToken": "d807d26bb0e9fc2d4fb2d05ef899df9b1e8b8afac28ca504985e952f5130373a",
+      "businessId": "biz_683ee8bd43e543ee",
+      "offerId": "off_4d85146e199b463e",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:41:30.011Z",
+      "expiresAt": "2026-09-30T11:11:30.011Z"
+    },
+    {
+      "sessionId": "cs_bcb272e97479a737",
+      "sessionToken": "281e49c08f68e81adc7a547a277d13dc2bdf23c7d76170555042389af35f4327",
+      "businessId": "biz_683ee8bd43e543ee",
+      "offerId": "off_4d85146e199b463e",
+      "customerId": "cust_35dc1b96f0574b64",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:41:39.912Z",
+      "expiresAt": "2026-09-30T11:11:39.913Z"
+    },
+    {
+      "sessionId": "cs_b64606f93f1ca6a9",
+      "sessionToken": "55fd30b72af1a762ebb042d9c9eee70220d6aafe3679e9e6f11a8f7837a8a007",
+      "businessId": "biz_683ee8bd43e543ee",
+      "offerId": "off_4d85146e199b463e",
+      "customerId": "cust_35dc1b96f0574b64",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:41:41.639Z",
+      "expiresAt": "2026-09-30T11:11:41.639Z"
+    },
+    {
+      "sessionId": "cs_6c7c37f9d268f846",
+      "sessionToken": "de12b7c21d27beaf9ec0187a3a5866c98218f45f13d4acadfba256151d0cee5f",
+      "businessId": "biz_683ee8bd43e543ee",
+      "offerId": "off_4d85146e199b463e",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:41:51.069Z",
+      "expiresAt": "2026-09-30T11:11:51.069Z"
+    },
+    {
+      "sessionId": "cs_0c7391812baec93e",
+      "sessionToken": "26d3194cdbd13847106192c02dc04ef226f53fcd70b9d5ede776a3a0cba4bff2",
+      "businessId": "biz_tokyo_ramen",
+      "offerId": "off_tokyo_spin",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:45:29.178Z",
+      "expiresAt": "2026-09-30T11:15:29.178Z"
+    },
+    {
+      "sessionId": "cs_8bc7ad8841bd333d",
+      "sessionToken": "6bfbc4c01a732d3d4c7ffd2a708307fc0db47c380fd0fc8f1e67b1edb84ad523",
+      "businessId": "biz_tokyo_ramen",
+      "offerId": "off_tokyo_spin",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:45:29.255Z",
+      "expiresAt": "2026-09-30T11:15:29.255Z"
+    },
+    {
+      "sessionId": "cs_558a1e3bba0319ae",
+      "sessionToken": "19f33177ba6d43d6c3039caa13bc12975f246db3bef41de6200e1c6efe59571d",
+      "businessId": "biz_tokyo_ramen",
+      "offerId": "off_tokyo_spin",
+      "customerId": "cust_69b84f9c12d1492f",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:45:53.437Z",
+      "expiresAt": "2026-09-30T11:15:53.438Z"
+    },
+    {
+      "sessionId": "cs_12189c92fd8ecdac",
+      "sessionToken": "cfe3c10b6d0ee1d7ef2790e5361c6dca69590b5e39c62153ddaa18f45df56519",
+      "businessId": "biz_tokyo_ramen",
+      "offerId": "off_tokyo_spin",
+      "customerId": "cust_69b84f9c12d1492f",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:45:55.823Z",
+      "expiresAt": "2026-09-30T11:15:55.823Z"
+    },
+    {
+      "sessionId": "cs_98bf26e2630a66dc",
+      "sessionToken": "7e10ef50c830a4304edb09e99b7869a83c7c8464c138609eaa7e813f99a56458",
+      "businessId": "biz_tokyo_ramen",
+      "offerId": "off_tokyo_spin",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:46:05.624Z",
+      "expiresAt": "2026-09-30T11:16:05.624Z"
+    },
+    {
+      "sessionId": "cs_356b8b32d6c7adb8",
+      "sessionToken": "2003a82c2278b09e95713f24161519ee224aa13c53443d18bd8df45044d3d669",
+      "businessId": "biz_tokyo_ramen",
+      "offerId": "off_tokyo_spin",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:46:06.402Z",
+      "expiresAt": "2026-09-30T11:16:06.402Z"
+    },
+    {
+      "sessionId": "cs_1f6f592bd94abd04",
+      "sessionToken": "851bff0daa343920048318898ea09b4be0a024e14c810be53d80feb89c710408",
+      "businessId": "biz_tokyo_ramen",
+      "offerId": "off_tokyo_spin",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:46:08.438Z",
+      "expiresAt": "2026-09-30T11:16:08.438Z"
+    },
+    {
+      "sessionId": "cs_731206b24ef0b213",
+      "sessionToken": "ca6867587b533b7bcae65e044c5caeb1b1ec96f700a0c6497af6aa82081a6511",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "offerId": "off_33fceacb5fbba46e",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:48:06.739Z",
+      "expiresAt": "2026-09-30T11:18:06.739Z"
+    },
+    {
+      "sessionId": "cs_7dc56695071f273c",
+      "sessionToken": "7c6a5625fcb3ab0ee63954e34714dc05bb2f2efaf8f961bea56c8db3b3c51b42",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "offerId": "off_33fceacb5fbba46e",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:48:06.812Z",
+      "expiresAt": "2026-09-30T11:18:06.812Z"
+    },
+    {
+      "sessionId": "cs_9a69efdc4e9c8a43",
+      "sessionToken": "b27765aea52a2d7b5864c616bdd00729c0a5364f3c51594bc9a8760559a1c6ae",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "offerId": "off_33fceacb5fbba46e",
+      "customerId": "cust_812f5b6ec066394d",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:48:15.633Z",
+      "expiresAt": "2026-09-30T11:18:15.633Z"
+    },
+    {
+      "sessionId": "cs_b7df84cf1f8b7403",
+      "sessionToken": "4013b22ce4e4a51bac62227398ea6b851b2d4ab9bf0ece81d39bff705b23e53c",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "offerId": "off_33fceacb5fbba46e",
+      "customerId": "cust_812f5b6ec066394d",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:48:18.371Z",
+      "expiresAt": "2026-09-30T11:18:18.371Z"
+    },
+    {
+      "sessionId": "cs_69404e4ee82c0d94",
+      "sessionToken": "2a44eeefd440702ef48ad7c387740acde82433899243df9c34c334bd799bf9fc",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "offerId": "off_33fceacb5fbba46e",
+      "authType": "qr",
+      "currentStage": "auth",
+      "isUsed": false,
+      "createdAt": "2026-09-30T10:48:26.309Z",
+      "expiresAt": "2026-09-30T11:18:26.309Z"
+    }
+  ],
+  "onboardingTokens": [
+    {
+      "id": "ot_5efe7cff380325dc",
+      "tokenHash": "43386fcf5cf058bb603afc3003b8958eb5ad3e5d720969e17477084be5271b5d",
+      "email": "don@gmail.com",
+      "tier": "loyalty",
+      "status": "completed",
+      "currentStep": "confirmation",
+      "draftData": {
+        "accentColor": "#0e7c66",
+        "logoEmoji": "🏪",
+        "loyaltyTarget": 6,
+        "loyaltyValidationDays": 60,
+        "loyaltyReward": "Free Specialty Entree or Gift",
+        "businessName": "don",
+        "category": "Restaurant & Dining",
+        "country": "India",
+        "city": "Mumbai, Maharashtra, IND",
+        "timezone": "Asia/Kolkata",
+        "zomatoUrl": "https://www.instagram.com/zomato/",
+        "instagramUrl": "https://www.instagram.com/molaeats/",
+        "staffPassword": "password123",
+        "staffPin": "1234"
+      },
+      "createdAt": "2026-09-30T10:40:45.752Z",
+      "expiresAt": "2026-09-30T10:55:45.752Z",
+      "businessId": "biz_683ee8bd43e543ee",
+      "usedAt": "2026-09-30T10:41:20.911Z"
+    },
+    {
+      "id": "ot_572416754d68c5c4",
+      "tokenHash": "0d6fa27f3be1b128488f4ea444d6e3860c551741d7aeba6f0204b5bdcf2347f2",
+      "email": "don@gmail.com",
+      "tier": "combined",
+      "status": "completed",
+      "currentStep": "confirmation",
+      "draftData": {
+        "accentColor": "#0e7c66",
+        "logoEmoji": "🏪",
+        "spinWheelConfiguration": [
+          {
+            "id": "s1",
+            "rewardLabel": "10% Off Your Purchase",
+            "emoji": "🎁",
+            "weight": 35
+          },
+          {
+            "id": "s2",
+            "rewardLabel": "Free Beverage Upgrade",
+            "emoji": "☕",
+            "weight": 35
+          },
+          {
+            "id": "s3",
+            "rewardLabel": "Chef Signature Dessert",
+            "emoji": "🍰",
+            "weight": 20
+          },
+          {
+            "id": "s4",
+            "rewardLabel": "VIP Grand Mystery Prize",
+            "emoji": "⭐",
+            "weight": 10
+          }
+        ],
+        "loyaltyTarget": 6,
+        "loyaltyValidationDays": 60,
+        "loyaltyReward": "Free Specialty Entree or Gift",
+        "businessName": "don2",
+        "category": "Restaurant & Dining",
+        "country": "India",
+        "city": "mumbai",
+        "timezone": "Asia/Kolkata",
+        "zomatoUrl": "https://www.instagram.com/zomato/",
+        "instagramUrl": "https://www.instagram.com/molaeats/",
+        "googleReviewUrl": "https://maps.google.com/?q=Your+Business+Name",
+        "staffPassword": "password123",
+        "staffPin": "1234"
+      },
+      "createdAt": "2026-09-30T10:46:43.613Z",
+      "expiresAt": "2026-09-30T11:01:43.613Z",
+      "businessId": "biz_7ae1f04687e60239",
+      "usedAt": "2026-09-30T10:47:07.885Z"
+    },
+    {
+      "id": "ot_c17697f49d96ea95",
+      "tokenHash": "c8e8f6f7f4557dd708078275f1f9767db141607fa3a79faf8347e309f086d96f",
+      "email": "don@gmail.com",
+      "tier": "loyalty",
+      "status": "completed",
+      "currentStep": "confirmation",
+      "draftData": {
+        "accentColor": "#0e7c66",
+        "logoEmoji": "🏪",
+        "loyaltyTarget": 6,
+        "loyaltyValidationDays": 60,
+        "loyaltyReward": "Free Specialty Entree or Gift",
+        "businessName": "don3",
+        "category": "Restaurant & Dining",
+        "country": "India",
+        "city": "mumbai",
+        "timezone": "Asia/Kolkata",
+        "zomatoUrl": "https://www.instagram.com/zomato/",
+        "instagramUrl": "https://www.instagram.com/molaeats/",
+        "staffPassword": "password123",
+        "staffPin": "1234"
+      },
+      "createdAt": "2026-09-30T10:47:26.146Z",
+      "expiresAt": "2026-09-30T11:02:26.146Z",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "usedAt": "2026-09-30T10:47:53.256Z"
+    }
+  ],
+  "onboardingSessions": [
+    {
+      "sessionId": "d8fd150644e150c3aec928b99ce8579b0b01bd0e80cb6c9c",
+      "tokenId": "ot_5efe7cff380325dc",
+      "email": "don@gmail.com",
+      "tier": "loyalty",
+      "currentStep": "profile",
+      "expiresAt": "2026-10-01T10:40:47.856Z"
+    },
+    {
+      "sessionId": "c5c5204806063efcb79d7321a64a2d6dd0fb30ed215a4391",
+      "tokenId": "ot_5efe7cff380325dc",
+      "email": "don@gmail.com",
+      "tier": "loyalty",
+      "currentStep": "confirmation",
+      "expiresAt": "2026-10-01T10:40:47.928Z"
+    },
+    {
+      "sessionId": "5b4c9328d9771b591e964bb6d2dfbcf7bf968854143bac1e",
+      "tokenId": "ot_572416754d68c5c4",
+      "email": "don@gmail.com",
+      "tier": "combined",
+      "currentStep": "profile",
+      "expiresAt": "2026-10-01T10:46:45.253Z"
+    },
+    {
+      "sessionId": "98f1d72db1d22084254b8e2e009248d0211aca34c7900ac3",
+      "tokenId": "ot_572416754d68c5c4",
+      "email": "don@gmail.com",
+      "tier": "combined",
+      "currentStep": "confirmation",
+      "expiresAt": "2026-10-01T10:46:45.327Z"
+    },
+    {
+      "sessionId": "2e83a0dc2cd2e35bceeb556fa8ca20d5eefd908b6e18fa86",
+      "tokenId": "ot_c17697f49d96ea95",
+      "email": "don@gmail.com",
+      "tier": "loyalty",
+      "currentStep": "profile",
+      "expiresAt": "2026-10-01T10:47:27.652Z"
+    },
+    {
+      "sessionId": "881833d60c6a1b678307cc5cbaf64a6dc7a151fa6d50f06b",
+      "tokenId": "ot_c17697f49d96ea95",
+      "email": "don@gmail.com",
+      "tier": "loyalty",
+      "currentStep": "confirmation",
+      "expiresAt": "2026-10-01T10:47:27.727Z"
+    }
+  ],
+  "staffSessions": [
+    {
+      "sessionId": "ff1fa57892eddc05adadedd443013cddbc68fbe529d396c0a7deb2679144bdeb",
+      "businessId": "biz_tokyo_ramen",
+      "businessName": "Tokyo Ramen Lab",
+      "businessSlug": "tokyo-ramen",
+      "tier": "spin",
+      "createdAt": "2026-09-30T10:37:51.027Z",
+      "expiresAt": "2026-10-01T10:37:51.027Z"
+    },
+    {
+      "sessionId": "c21b92ad36218bb4725f0750b862a668fcb9031d719ef74942ff0f2cfddbacd6",
+      "businessId": "biz_683ee8bd43e543ee",
+      "businessName": "don",
+      "businessSlug": "don",
+      "tier": "loyalty",
+      "createdAt": "2026-09-30T10:41:20.911Z",
+      "expiresAt": "2026-10-01T10:41:20.920Z"
+    },
+    {
+      "sessionId": "b64904ca067dde4c36f79a9a982cf2d435ad7636e9b87e96be02febc4d08efb1",
+      "businessId": "biz_tokyo_ramen",
+      "businessName": "Tokyo Ramen Lab",
+      "businessSlug": "tokyo-ramen",
+      "tier": "spin",
+      "createdAt": "2026-09-30T10:44:57.187Z",
+      "expiresAt": "2026-10-01T10:44:57.187Z"
+    },
+    {
+      "sessionId": "de0170779b0b6c00e19f34925d9c1a985e81afcbeb9041b6a860d995c7715604",
+      "businessId": "biz_bella_napoli",
+      "businessName": "Bella Napoli Pizzeria",
+      "businessSlug": "bella-napoli",
+      "tier": "combined",
+      "createdAt": "2026-09-30T10:46:26.115Z",
+      "expiresAt": "2026-10-01T10:46:26.115Z"
+    },
+    {
+      "sessionId": "f9d81b4328333078be00f06acf5a985683e5e08b04e973f5be727f9675585373",
+      "businessId": "biz_7ae1f04687e60239",
+      "businessName": "don2",
+      "businessSlug": "don2",
+      "tier": "combined",
+      "createdAt": "2026-09-30T10:47:07.885Z",
+      "expiresAt": "2026-10-01T10:47:07.894Z"
+    },
+    {
+      "sessionId": "005cffa39fbbfb08799d894e14a5a0825cb8eaf1b36afb375b8bca4d4fb7adbe",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "businessName": "don3",
+      "businessSlug": "don3",
+      "tier": "loyalty",
+      "createdAt": "2026-09-30T10:47:53.256Z",
+      "expiresAt": "2026-10-01T10:47:53.264Z"
+    }
+  ]
+}

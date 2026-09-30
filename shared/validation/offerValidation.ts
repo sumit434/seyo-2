@@ -65,6 +65,16 @@ export function validateTierConfiguration(tier: ProductTier, draft: OnboardingDr
     } catch {
       return { valid: false, error: 'Invalid Google Review URL' };
     }
+  } else if (draft.googleReviewUrl && draft.googleReviewUrl.trim()) {
+    // Optional add-on validation for spin or loyalty tiers
+    try {
+      const url = new URL(draft.googleReviewUrl);
+      if (!['http:', 'https:'].includes(url.protocol)) {
+        return { valid: false, error: 'Invalid Google Review URL format' };
+      }
+    } catch {
+      return { valid: false, error: 'Invalid Google Review URL' };
+    }
   }
 
   return { valid: true };

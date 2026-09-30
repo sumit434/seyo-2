@@ -185,4 +185,32 @@ router.post('/voucher/redeem', (req: Request, res: Response, next) => {
   }
 });
 
+// Defer voucher to retain in session while continuing journey to review check
+router.post('/voucher/defer', (req: Request, res: Response, next) => {
+  try {
+    const { businessId, customerId } = req.body;
+    const business = db.getBusinessById(businessId);
+    if (!business) {
+      return res.status(404).json({ success: false, message: 'Business not found' });
+    }
+    const customer = db.getCustomerById(customerId);
+    if (!customer) {
+      return res.status(404).json({ success: false, message: 'Customer not found' });
+    }
+    customer.voucherDeferred = true;
+    customer.updatedAt = new Date().toISOString();
+    db.saveCustomer(customer);
+
+    const offer = db.getActiveOfferByBusinessId(businessId);
+    const statusPayload = statusService.formatStatusResponse(business, offer || null, customer);
+    res.json({
+      success: true,
+      message: 'Voucher saved in active session',
+      ...statusPayload,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

@@ -38,6 +38,14 @@ export class ReviewService {
     const nowIso = new Date().toISOString();
     const logId = `rev_${generateSecureToken(8)}`;
 
+    // Record one-time review accelerator entry on customer data
+    customer.hasEnteredReviewFlow = true;
+    if (!customer.reviewAcceleratorEntryId) {
+      customer.reviewAcceleratorEntryId = `rev_acc_${generateSecureToken(8)}`;
+    }
+    customer.updatedAt = nowIso;
+    this.db.saveCustomer(customer);
+
     const reviewLog: ReviewLog = {
       id: logId,
       businessId,
@@ -73,6 +81,10 @@ export class ReviewService {
     
     const customer = this.db.getCustomerById(customerId);
     if (customer) {
+      customer.hasEnteredReviewFlow = true;
+      if (!customer.reviewAcceleratorEntryId) {
+        customer.reviewAcceleratorEntryId = `rev_acc_${generateSecureToken(8)}`;
+      }
       customer.reviewJourneyCompleted = true;
       customer.reviewJourneyCompletedAt = new Date().toISOString();
       customer.updatedAt = new Date().toISOString();

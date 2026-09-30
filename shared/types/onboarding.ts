@@ -17,6 +17,10 @@ export interface OnboardingDraftData {
   loyaltyReward?: string;
   googleReviewUrl?: string;
   googlePlaceId?: string;
+  // Social links
+  zomatoUrl?: string;
+  swiggyUrl?: string;
+  instagramUrl?: string;
   // Security
   staffPassword?: string;
   staffPin?: string; // 4-digit PIN

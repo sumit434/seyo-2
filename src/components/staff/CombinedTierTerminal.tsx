@@ -4,7 +4,9 @@ import { RewardRecordsList } from './RewardRecordsList';
 import { QRGenerator } from './QRGenerator';
 import { StaffPINModal } from './StaffPINModal';
 import { OfferHistoryList } from './OfferHistoryList';
+import { ActivateOfferModal } from './ActivateOfferModal';
 import { Button } from '../common/Button';
+import { Modal } from '../common/Modal';
 import { staffApi } from '../../services/staffApi';
 import {
   Users,
@@ -16,10 +18,13 @@ import {
   RotateCcw,
   Sparkles,
   CheckCircle,
+  CheckCircle2,
+  RefreshCw,
   Eye,
   EyeOff,
   History,
   Trash2,
+  Plus,
 } from 'lucide-react';
 
 interface CombinedTierTerminalProps {
@@ -59,7 +64,11 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
 
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [targetVoucherCode, setTargetVoucherCode] = useState<string | undefined>(undefined);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeletingOffer, setIsDeletingOffer] = useState(false);
+  const [isActivateModalOpen, setIsActivateModalOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [showStaffPin, setShowStaffPin] = useState(false);
 
   const metrics = offer?.metrics || {
@@ -70,21 +79,37 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
     loyaltyStampsIssued: 0,
   };
 
+  // Pending rewards waiting to be redeemed
+  const pendingRewardsCount = rewards.filter((r: any) => r.status === 'pending' || r.status === 'active').length;
+  const totalGuestsCount = loyaltyRecords.length || metrics.identifiedGuests || metrics.scans || 0;
+  const totalReviewsCount = reviews.length || (metrics as any).reviewsPersisted || 0;
+  const totalClaimedCount = metrics.rewardsRedeemed || 0;
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await onRefresh();
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 400);
+    }
+  };
+
   const handleOpenRedeem = (code?: string) => {
     setTargetVoucherCode(code);
     setIsPinModalOpen(true);
   };
 
-  const handleDeleteOffer = async () => {
-    if (!window.confirm('Are you sure you want to delete this active offer? It will be archived in Offer History and no active offer will be displayed.')) {
-      return;
-    }
+  const handleConfirmDeleteOffer = async () => {
     setIsDeletingOffer(true);
+    setDeleteError(null);
     try {
       await staffApi.deleteOffer(sessionToken);
+      setIsDeleteModalOpen(false);
+      // Switch to offer history so the merchant immediately sees the archived offer
+      setActiveTab('history');
       onRefresh();
     } catch (err: any) {
-      alert(err.message || 'Failed to delete offer');
+      setDeleteError(err.message || 'Failed to delete offer');
     } finally {
       setIsDeletingOffer(false);
     }
@@ -157,43 +182,105 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
         </div>
       </div>
 
-      {/* Metric Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-left">
-        <div className="bg-white p-5 rounded-3xl border border-[#e2e7e6] shadow-xs">
-          <div className="flex items-center justify-between text-[#6a787e] mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider">Total Scans</span>
-            <Sparkles className="w-4 h-4 text-[#0e7c66]" />
+      {/* MOBILE VERSION: All-in-One Panel Box enclosing the 2x2 grid and refresh button */}
+      <div className="block md:hidden bg-white border border-[#e2e7e6] rounded-3xl p-5 shadow-sm text-left">
+        <div className="grid grid-cols-2 gap-2.5 mb-3">
+          <div className="bg-[#f8faf9] p-3 rounded-2xl border border-[#e2e7e6]/70">
+            <div className="flex items-center justify-between text-[#6a787e] mb-0.5">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Total Guests</span>
+              <Users className="w-3.5 h-3.5 text-[#0e7c66]" />
+            </div>
+            <span className="text-xl font-black text-[#10181c] font-mono">{totalGuestsCount}</span>
           </div>
-          <span className="text-2xl font-black text-[#10181c] font-mono">{metrics.scans}</span>
+
+          <div className="bg-[#f8faf9] p-3 rounded-2xl border border-[#e2e7e6]/70">
+            <div className="flex items-center justify-between text-[#6a787e] mb-0.5">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Claimed</span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#0e7c66]" />
+            </div>
+            <span className="text-xl font-black text-[#10181c] font-mono">{totalClaimedCount}</span>
+          </div>
+
+          <div className="bg-[#f8faf9] p-3 rounded-2xl border border-[#e2e7e6]/70">
+            <div className="flex items-center justify-between text-[#6a787e] mb-0.5">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Pending</span>
+              <Gift className="w-3.5 h-3.5 text-amber-600" />
+            </div>
+            <span className="text-xl font-black text-amber-600 font-mono">{pendingRewardsCount}</span>
+          </div>
+
+          <div className="bg-[#f8faf9] p-3 rounded-2xl border border-[#e2e7e6]/70">
+            <div className="flex items-center justify-between text-[#6a787e] mb-0.5">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Reviews</span>
+              <Star className="w-3.5 h-3.5 text-[#0e7c66]" />
+            </div>
+            <span className="text-xl font-black text-[#10181c] font-mono">{totalReviewsCount}</span>
+          </div>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-[#e2e7e6] shadow-xs">
-          <div className="flex items-center justify-between text-[#6a787e] mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider">Loyal Guests</span>
-            <Users className="w-4 h-4 text-[#0e7c66]" />
+        {/* Horizontal Rectangular Refresh Button Inside the Same Box */}
+        <button
+          type="button"
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          className="w-full py-3 px-4 bg-[#0e7c66] hover:bg-[#0a6252] text-white rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer disabled:opacity-75"
+        >
+          <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          <span>{isRefreshing ? 'Refreshing Stats...' : 'Refresh Stats'}</span>
+        </button>
+      </div>
+
+      {/* DESKTOP VERSION: Single Panel Box with Squeezed Grid on Left and Rounded Square Icon-Only Button on Right */}
+      <div className="hidden md:flex bg-white border border-[#e2e7e6] rounded-3xl p-5 items-center justify-between gap-4 shadow-sm text-left">
+        <div className="grid grid-cols-4 gap-3 flex-1">
+          <div className="bg-[#f8faf9] p-3.5 rounded-2xl border border-[#e2e7e6]/70">
+            <div className="flex items-center justify-between text-[#6a787e] mb-1">
+              <span className="text-xs font-bold uppercase tracking-wider">Total Guests</span>
+              <Users className="w-4 h-4 text-[#0e7c66]" />
+            </div>
+            <span className="text-2xl font-black text-[#10181c] font-mono">{totalGuestsCount}</span>
           </div>
-          <span className="text-2xl font-black text-[#10181c] font-mono">{loyaltyRecords.length}</span>
+
+          <div className="bg-[#f8faf9] p-3.5 rounded-2xl border border-[#e2e7e6]/70">
+            <div className="flex items-center justify-between text-[#6a787e] mb-1">
+              <span className="text-xs font-bold uppercase tracking-wider">Claimed</span>
+              <CheckCircle2 className="w-4 h-4 text-[#0e7c66]" />
+            </div>
+            <span className="text-2xl font-black text-[#10181c] font-mono">{totalClaimedCount}</span>
+          </div>
+
+          <div className="bg-[#f8faf9] p-3.5 rounded-2xl border border-[#e2e7e6]/70">
+            <div className="flex items-center justify-between text-[#6a787e] mb-1">
+              <span className="text-xs font-bold uppercase tracking-wider">Pending</span>
+              <Gift className="w-4 h-4 text-amber-600" />
+            </div>
+            <span className="text-2xl font-black text-amber-600 font-mono">{pendingRewardsCount}</span>
+          </div>
+
+          <div className="bg-[#f8faf9] p-3.5 rounded-2xl border border-[#e2e7e6]/70">
+            <div className="flex items-center justify-between text-[#6a787e] mb-1">
+              <span className="text-xs font-bold uppercase tracking-wider">Reviews</span>
+              <Star className="w-4 h-4 text-[#0e7c66]" />
+            </div>
+            <span className="text-2xl font-black text-[#10181c] font-mono">{totalReviewsCount}</span>
+          </div>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-[#e2e7e6] shadow-xs">
-          <div className="flex items-center justify-between text-[#6a787e] mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider">Stamps Issued</span>
-            <Award className="w-4 h-4 text-[#0e7c66]" />
-          </div>
-          <span className="text-2xl font-black text-[#10181c] font-mono">{metrics.loyaltyStampsIssued}</span>
-        </div>
-
-        <div className="bg-white p-5 rounded-3xl border border-[#e2e7e6] shadow-xs">
-          <div className="flex items-center justify-between text-[#6a787e] mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider">Redeemed Treats</span>
-            <CheckCircle className="w-4 h-4 text-[#0e7c66]" />
-          </div>
-          <span className="text-2xl font-black text-[#10181c] font-mono">{metrics.rewardsRedeemed}</span>
-        </div>
+        {/* Rounded square icon-only button on the right */}
+        <button
+          type="button"
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          title="Refresh Stats"
+          aria-label="Refresh Stats"
+          className="shrink-0 w-16 h-16 bg-[#0e7c66] hover:bg-[#0a6252] text-white rounded-2xl flex items-center justify-center transition-all shadow-xs hover:shadow cursor-pointer disabled:opacity-75 active:scale-95"
+        >
+          <RefreshCw className={`w-6 h-6 ${isRefreshing ? 'animate-spin' : ''}`} />
+        </button>
       </div>
 
       {/* Active Offer Status Banner */}
-      {offer && (
+      {offer ? (
         <div className="bg-white rounded-3xl border border-[#e2e7e6] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -209,13 +296,52 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
           <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
-              onClick={handleDeleteOffer}
+              onClick={() => {
+                setDeleteError(null);
+                setIsDeleteModalOpen(true);
+              }}
               disabled={isDeletingOffer}
               className="text-xs font-semibold text-red-600 hover:text-red-800 hover:bg-red-50 px-3 py-2 rounded-xl transition-colors cursor-pointer border border-red-200 flex items-center gap-1.5"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              <span>{isDeletingOffer ? 'Deleting...' : 'Delete Offer'}</span>
+              <span>Delete Offer</span>
             </button>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-white rounded-3xl border border-dashed border-[#0e7c66]/40 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left shadow-xs">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-700">
+                No Active Campaign Running
+              </span>
+            </div>
+            <h4 className="font-bold text-[#10181c] text-sm">
+              Activate {business.name}&apos;s {business.tier.toUpperCase()} Offer
+            </h4>
+            <p className="text-xs text-[#6a787e]">
+              Launch a live offer tailored to your plan so in-store guests can spin, collect visit stamps, or share verified feedback.
+            </p>
+          </div>
+          <div className="flex items-center gap-2.5 shrink-0">
+            <button
+              type="button"
+              onClick={() => setActiveTab('history')}
+              className="text-xs font-semibold text-[#6a787e] hover:text-[#10181c] hover:bg-[#f1f3f2] px-3.5 py-2.5 rounded-xl transition-colors cursor-pointer border border-[#e2e7e6] flex items-center gap-1.5"
+            >
+              <History className="w-3.5 h-3.5" />
+              <span>Offer History</span>
+            </button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setIsActivateModalOpen(true)}
+              className="flex items-center gap-1.5 shadow-sm"
+            >
+              <Plus className="w-4 h-4 stroke-[2.5]" />
+              <span>Activate Offer</span>
+            </Button>
           </div>
         </div>
       )}
@@ -355,6 +481,73 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
         sessionToken={sessionToken}
         initialCode={targetVoucherCode}
         configuredPin={business.configuredStaffPin}
+        onSuccess={() => {
+          onRefresh();
+        }}
+      />
+
+      {/* Delete Offer Confirmation Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => !isDeletingOffer && setIsDeleteModalOpen(false)}
+        title="Delete Ongoing Offer"
+        description="Are you sure you want to delete this ongoing campaign?"
+        maxWidth="md"
+      >
+        <div className="space-y-4 text-left">
+          {offer && (
+            <div className="p-4 rounded-2xl bg-[#f8faf9] border border-[#e2e7e6] space-y-1">
+              <span className="text-xs uppercase font-bold text-[#6a787e]">Current Active Campaign</span>
+              <h4 className="font-bold text-[#10181c] text-sm">{offer.title}</h4>
+              <p className="text-xs text-[#6a787e]">{offer.description}</p>
+            </div>
+          )}
+
+          <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-800 space-y-1">
+            <p className="font-semibold flex items-center gap-1.5">
+              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>Historical data will be preserved</span>
+            </p>
+            <p>
+              Once deleted, this offer will no longer be visible to scanning customers. Its full historical records, scan metrics, and redemption logs will be archived in the <strong>Offer History</strong> tab.
+            </p>
+          </div>
+
+          {deleteError && (
+            <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-semibold text-red-700">
+              {deleteError}
+            </div>
+          )}
+
+          <div className="flex items-center justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setIsDeleteModalOpen(false)}
+              disabled={isDeletingOffer}
+              className="px-4 py-2.5 rounded-xl border border-[#e2e7e6] text-[#6a787e] hover:text-[#10181c] hover:bg-black/5 text-sm font-semibold transition-colors cursor-pointer disabled:opacity-50"
+            >
+              Cancel
+            </button>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={handleConfirmDeleteOffer}
+              isLoading={isDeletingOffer}
+              className="flex items-center gap-1.5"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>Confirm Delete</span>
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Activate Offer Funnel Modal for Specific Tier Plan */}
+      <ActivateOfferModal
+        isOpen={isActivateModalOpen}
+        onClose={() => setIsActivateModalOpen(false)}
+        sessionToken={sessionToken}
+        business={business}
         onSuccess={() => {
           onRefresh();
         }}

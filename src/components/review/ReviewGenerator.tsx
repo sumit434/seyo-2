@@ -75,7 +75,15 @@ export const ReviewGenerator: React.FC<ReviewGeneratorProps> = ({
     setIsSubmitting(true);
     setError(null);
     try {
-      // 1. Mandatory server-side persistence BEFORE redirecting
+      // 1. Copy review text to clipboard
+      try {
+        await navigator.clipboard.writeText(reviewText);
+        setCopied(true);
+      } catch {
+        // clipboard write may fail if permission denied, continue flow
+      }
+
+      // 2. Mandatory server-side persistence BEFORE redirecting
       const res = await customerService.persistReview(
         businessId,
         customerId,
@@ -84,11 +92,12 @@ export const ReviewGenerator: React.FC<ReviewGeneratorProps> = ({
         reviewText
       );
 
-      // 2. Open Google review link
-      const targetUrl = res.googleReviewUrl || googleReviewUrl;
+      // 3. Open Google review link
+      const fallbackUrl = `https://maps.google.com/?q=${encodeURIComponent(businessName.replace(/\s+/g, '+'))}`;
+      const targetUrl = res.googleReviewUrl || googleReviewUrl || fallbackUrl;
       window.open(targetUrl, '_blank', 'noopener,noreferrer');
 
-      // 3. Mark google opened
+      // 4. Mark google opened and complete review journey
       await customerService.markGoogleOpened(res.reviewLogId, customerId);
 
       onReviewCompleted();

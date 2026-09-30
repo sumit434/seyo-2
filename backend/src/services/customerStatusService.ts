@@ -30,6 +30,8 @@ export class CustomerStatusService {
 
     const now = new Date();
     const tz = business.timezone || 'UTC';
+    const defaultGoogleUrl = `https://maps.google.com/?q=${encodeURIComponent(business.name.replace(/\s+/g, '+'))}`;
+    const effectiveReviewUrl = offer?.googleReviewUrl || business.googleReviewUrl || defaultGoogleUrl;
 
     // Daily checks in merchant timezone
     const spinCompletedToday = isSameMerchantDay(customer.lastSpinAt, now, tz);
@@ -37,7 +39,6 @@ export class CustomerStatusService {
 
     const hasSpinTier = business.tier === 'spin' || business.tier === 'combined';
     const hasLoyaltyTier = business.tier === 'loyalty' || business.tier === 'combined';
-    const hasReviewTier = business.tier === 'review' || business.tier === 'combined';
 
     const loyaltyTarget = offer?.loyaltyTarget || business.loyaltyTarget || 6;
     const loyaltyMilestoneReached = (customer.visitCount >= loyaltyTarget);
@@ -52,12 +53,22 @@ export class CustomerStatusService {
     const spinAvailable = hasSpinTier && !spinCompletedToday && !activeReward;
     const loyaltyAvailable = hasLoyaltyTier && !loyaltyCompletedToday;
     const reviewJourneyCompleted = customer.reviewJourneyCompleted === true;
+    const hasEverEnteredReview = Boolean(
+      customer.hasEnteredReviewFlow ||
+      customer.reviewAcceleratorEntryId ||
+      customer.reviewJourneyCompleted
+    );
+
+    // Individual app flow completed today (Spin finished, Loyalty stamped today, Voucher redeemed or deferred)
+    const individualFlowCompleted = 
+      (hasSpinTier && spinCompletedToday && (!activeReward || customer.voucherDeferred)) ||
+      (hasLoyaltyTier && loyaltyCompletedToday && (!activeReward || customer.voucherDeferred));
 
     // Determine First Incomplete Stage
     let currentStage: CustomerJourneyStage = 'cooldown';
     let isCooldown = false;
 
-    if (activeReward) {
+    if (activeReward && !customer.voucherDeferred) {
       currentStage = 'voucher';
     } else if (hasSpinTier && !spinCompletedToday) {
       currentStage = 'spin';
@@ -65,8 +76,26 @@ export class CustomerStatusService {
       currentStage = 'loyalty_reward';
     } else if (hasLoyaltyTier && !loyaltyCompletedToday) {
       currentStage = 'loyalty';
-    } else if (hasReviewTier && !reviewJourneyCompleted) {
-      currentStage = 'review';
+    } else if (business.tier === 'review') {
+      if (!hasEverEnteredReview) {
+        currentStage = 'review';
+      } else {
+        currentStage = 'cooldown';
+        isCooldown = true;
+      }
+    } else if (individualFlowCompleted) {
+      // Completed specific individual tier flow! (Spin / Loyalty stamp / reward redeem)
+      // Check database condition in specific user data:
+      // Has this registered mobile number ever entered the review accelerator app flow?
+      if (hasEverEnteredReview) {
+        // Condition is TRUE (already entered/completed before): skips review accelerator add-on, direct to cooldown!
+        currentStage = 'cooldown';
+        isCooldown = true;
+      } else {
+        // Condition is FALSE (never entered before): enters review accelerator app flow!
+        currentStage = 'review';
+        isCooldown = false;
+      }
     } else {
       currentStage = 'cooldown';
       isCooldown = true;
@@ -80,6 +109,8 @@ export class CustomerStatusService {
       loyaltyMilestoneReached,
       activeReward,
       reviewJourneyCompleted,
+      hasEnteredReviewFlow: customer.hasEnteredReviewFlow,
+      reviewAcceleratorEntryId: customer.reviewAcceleratorEntryId,
       currentStage,
       isCooldown,
       cooldownMessage: isCooldown
@@ -96,6 +127,8 @@ export class CustomerStatusService {
     offer: Offer | null,
     customer: Customer | null
   ): CustomerStatusResponse {
+    const defaultGoogleUrl = `https://maps.google.com/?q=${encodeURIComponent(business.name.replace(/\s+/g, '+'))}`;
+    const effectiveReviewUrl = offer?.googleReviewUrl || business.googleReviewUrl || defaultGoogleUrl;
     const status = this.evaluateStatus(business, offer, customer);
 
     return {
@@ -111,6 +144,11 @@ export class CustomerStatusService {
         logoEmoji: business.logoEmoji,
         logoUrl: business.logoUrl,
         accentColor: business.accentColor,
+        googleReviewUrl: effectiveReviewUrl,
+        googlePlaceId: business.googlePlaceId,
+        zomatoUrl: business.zomatoUrl,
+        swiggyUrl: business.swiggyUrl,
+        instagramUrl: business.instagramUrl,
       },
       offer: offer ? {
         id: offer.id,
@@ -121,7 +159,7 @@ export class CustomerStatusService {
         loyaltyTarget: offer.loyaltyTarget,
         loyaltyValidationDays: offer.loyaltyValidationDays,
         loyaltyReward: offer.loyaltyReward,
-        googleReviewUrl: offer.googleReviewUrl,
+        googleReviewUrl: effectiveReviewUrl,
       } : null,
       customer: customer ? {
         id: customer.id,
@@ -129,6 +167,8 @@ export class CustomerStatusService {
         mobileMasked: maskMobile(customer.mobile),
         visitCount: customer.visitCount,
         totalVisits: customer.totalVisits,
+        hasEnteredReviewFlow: customer.hasEnteredReviewFlow,
+        reviewAcceleratorEntryId: customer.reviewAcceleratorEntryId,
         activeVoucher: customer.activeVoucher,
       } : null,
       status,

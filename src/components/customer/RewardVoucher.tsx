@@ -13,6 +13,7 @@ interface RewardVoucherProps {
   };
   businessName: string;
   businessId?: string;
+  customerId?: string;
   onRedeemed: () => void;
   onContinue: () => void;
 }
@@ -21,13 +22,32 @@ export const RewardVoucher: React.FC<RewardVoucherProps> = ({
   voucher,
   businessName,
   businessId,
+  customerId,
   onRedeemed,
   onContinue,
 }) => {
   const [staffPin, setStaffPin] = useState('');
   const [isRedeeming, setIsRedeeming] = useState(false);
+  const [isDeferring, setIsDeferring] = useState(false);
   const [isRedeemed, setIsRedeemed] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleDefer = async () => {
+    if (!businessId || !customerId) {
+      onContinue();
+      return;
+    }
+    setIsDeferring(true);
+    setError(null);
+    try {
+      await customerService.deferVoucher(businessId, customerId);
+      onContinue();
+    } catch (err: any) {
+      setError(err.message || 'Could not proceed. Please try again.');
+    } finally {
+      setIsDeferring(false);
+    }
+  };
 
   const handleRedeem = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,6 +146,9 @@ export const RewardVoucher: React.FC<RewardVoucherProps> = ({
                 }}
                 className="w-full text-center text-xl font-mono tracking-widest py-3 px-4 rounded-xl border border-[#e2e7e6] bg-white focus:outline-none focus:ring-2 focus:ring-[#0e7c66]"
               />
+              <p className="text-[11px] text-[#6a787e] text-center">
+                Merchant terminal verification PIN (Default: <strong className="font-mono text-[#0e7c66]">7788</strong>)
+              </p>
 
               {error && (
                 <p className="text-xs font-medium text-red-600 text-center">{error}</p>
@@ -141,6 +164,15 @@ export const RewardVoucher: React.FC<RewardVoucherProps> = ({
               >
                 <span>Verify & Redeem</span>
               </Button>
+
+              <button
+                type="button"
+                onClick={handleDefer}
+                disabled={isDeferring}
+                className="w-full text-center text-xs text-[#6a787e] hover:text-[#10181c] font-semibold py-2 underline cursor-pointer"
+              >
+                {isDeferring ? 'Saving...' : 'Redeem Later & Proceed to Review Check →'}
+              </button>
             </form>
           </div>
         )}

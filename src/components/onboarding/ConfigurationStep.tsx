@@ -24,6 +24,8 @@ export const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
   onBack,
   isLoading,
 }) => {
+  const tierInfo = PRODUCT_TIERS[tier] || PRODUCT_TIERS.combined;
+
   const [spinSlices, setSpinSlices] = useState<SpinSliceConfig[]>(
     initialData.spinWheelConfiguration || [
       { id: 's1', rewardLabel: '10% Off Your Purchase', emoji: '🎁', weight: 35 },
@@ -37,12 +39,12 @@ export const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
   const [loyaltyValidationDays, setLoyaltyValidationDays] = useState<number>(initialData.loyaltyValidationDays || 45);
   const [loyaltyReward, setLoyaltyReward] = useState<string>(initialData.loyaltyReward || 'Free Signature Item / VIP Gift');
 
-  const [googleReviewUrl, setGoogleReviewUrl] = useState<string>(initialData.googleReviewUrl || 'https://maps.google.com/?q=Your+Business+Name');
+  const [googleReviewUrl, setGoogleReviewUrl] = useState<string>(
+    initialData.googleReviewUrl || (tierInfo.hasReview ? 'https://maps.google.com/?q=Your+Business+Name' : '')
+  );
   const [googlePlaceId, setGooglePlaceId] = useState<string>(initialData.googlePlaceId || '');
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  const tierInfo = PRODUCT_TIERS[tier] || PRODUCT_TIERS.combined;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,8 +54,9 @@ export const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
       loyaltyTarget: tierInfo.hasLoyalty ? loyaltyTarget : undefined,
       loyaltyValidationDays: tierInfo.hasLoyalty ? loyaltyValidationDays : undefined,
       loyaltyReward: tierInfo.hasLoyalty ? loyaltyReward.trim() : undefined,
-      googleReviewUrl: tierInfo.hasReview ? googleReviewUrl.trim() : undefined,
-      googlePlaceId: tierInfo.hasReview ? googlePlaceId.trim() : undefined,
+      // Review URL configured for review/combined tier OR as an add-on for spin / loyalty tiers
+      googleReviewUrl: googleReviewUrl.trim() || undefined,
+      googlePlaceId: googlePlaceId.trim() || undefined,
     };
 
     const valResult = validateTierConfiguration(tier, candidateData);
@@ -101,17 +104,17 @@ export const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
         />
       )}
 
-      {tierInfo.hasReview && (
-        <ReviewConfiguration
-          googleReviewUrl={googleReviewUrl}
-          googlePlaceId={googlePlaceId}
-          onChange={fields => {
-            if (fields.googleReviewUrl !== undefined) setGoogleReviewUrl(fields.googleReviewUrl);
-            if (fields.googlePlaceId !== undefined) setGooglePlaceId(fields.googlePlaceId);
-          }}
-          errors={errors}
-        />
-      )}
+      {/* Review Accelerator: Core feature for Review/Combined, and add-on for Spin/Loyalty */}
+      <ReviewConfiguration
+        googleReviewUrl={googleReviewUrl}
+        googlePlaceId={googlePlaceId}
+        isAddon={!tierInfo.hasReview}
+        onChange={fields => {
+          if (fields.googleReviewUrl !== undefined) setGoogleReviewUrl(fields.googleReviewUrl);
+          if (fields.googlePlaceId !== undefined) setGooglePlaceId(fields.googlePlaceId);
+        }}
+        errors={errors}
+      />
 
       {errors.form && (
         <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-600 text-sm font-semibold">

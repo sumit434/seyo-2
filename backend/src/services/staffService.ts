@@ -140,6 +140,77 @@ export class StaffService {
   }
 
   /**
+   * Create and activate a fresh offer for the business tailored to its tier plan
+   */
+  public createAndActivateOffer(
+    businessId: string,
+    offerData: {
+      title: string;
+      description?: string;
+      spinWheelConfiguration?: any[];
+      loyaltyTarget?: number;
+      loyaltyValidationDays?: number;
+      loyaltyReward?: string;
+      googleReviewUrl?: string;
+    }
+  ): any {
+    const business = this.db.getBusinessById(businessId);
+    if (!business) {
+      throw new Error('BUSINESS_NOT_FOUND: Business does not exist');
+    }
+
+    // Ensure no other active offer is currently running
+    const existingActive = this.db.getActiveOfferByBusinessId(businessId);
+    if (existingActive) {
+      throw new Error('ACTIVE_OFFER_EXISTS: An offer is already active. Please delete or complete it before activating a new one.');
+    }
+
+    const nowIso = new Date().toISOString();
+    const offerId = `off_${generateSecureToken(8)}`;
+
+    const newOffer = {
+      id: offerId,
+      businessId,
+      title: offerData.title.trim(),
+      description: (offerData.description || `Official ${business.tier.toUpperCase()} experience for ${business.name}`).trim(),
+      tier: business.tier,
+      status: 'active' as const,
+      createdAt: nowIso,
+      activatedAt: nowIso,
+      durationDays: 365,
+      spinWheelConfiguration: offerData.spinWheelConfiguration || business.spinWheelConfiguration,
+      loyaltyTarget: offerData.loyaltyTarget || business.loyaltyTarget,
+      loyaltyValidationDays: offerData.loyaltyValidationDays || business.loyaltyValidationDays,
+      loyaltyReward: offerData.loyaltyReward || business.loyaltyReward,
+      googleReviewUrl: offerData.googleReviewUrl || business.googleReviewUrl,
+      metrics: {
+        scans: 0,
+        identifiedGuests: 0,
+        rewardsIssued: 0,
+        rewardsRedeemed: 0,
+        reviewsPrompted: 0,
+        reviewsPersisted: 0,
+        loyaltyStampsIssued: 0,
+        loyaltyMilestonesClaimed: 0,
+      },
+    };
+
+    // Save offer
+    this.db.saveOffer(newOffer);
+
+    // Sync business default configs if updated
+    if (newOffer.spinWheelConfiguration) business.spinWheelConfiguration = newOffer.spinWheelConfiguration;
+    if (newOffer.loyaltyTarget) business.loyaltyTarget = newOffer.loyaltyTarget;
+    if (newOffer.loyaltyValidationDays) business.loyaltyValidationDays = newOffer.loyaltyValidationDays;
+    if (newOffer.loyaltyReward) business.loyaltyReward = newOffer.loyaltyReward;
+    if (newOffer.googleReviewUrl) business.googleReviewUrl = newOffer.googleReviewUrl;
+    business.updatedAt = nowIso;
+    this.db.saveBusiness(business);
+
+    return newOffer;
+  }
+
+  /**
    * Get all historical offers for a business (scoped strictly by businessId)
    */
   public getOfferHistory(businessId: string) {

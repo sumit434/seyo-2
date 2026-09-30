@@ -93,15 +93,44 @@ export const ConfirmationStep: React.FC<ConfirmationStepProps> = ({
             </div>
           )}
 
-          {tierInfo.hasReview && (
+          {(tierInfo.hasReview || draftData.googleReviewUrl) && (
             <div className="p-3.5 rounded-2xl bg-[#f1f3f2]/60 border border-[#e2e7e6]">
               <div className="flex items-center justify-between text-sm font-bold text-[#10181c] mb-1">
                 <span>⭐ Google Review Accelerator</span>
-                <span className="text-xs text-[#0e7c66] font-semibold">Verified Feedback</span>
+                <span className="text-xs text-[#0e7c66] font-semibold">
+                  {tierInfo.hasReview ? 'Verified Feedback' : 'Add-On Enabled'}
+                </span>
               </div>
               <p className="text-xs text-[#6a787e] truncate">
-                Target URL: <span className="text-[#10181c] font-medium">{draftData.googleReviewUrl}</span>
+                Target URL: <span className="text-[#10181c] font-medium">{draftData.googleReviewUrl || 'Not configured'}</span>
               </p>
+            </div>
+          )}
+
+          {/* Social Links Summary if configured */}
+          {(draftData.zomatoUrl || draftData.swiggyUrl || draftData.instagramUrl) && (
+            <div className="p-3.5 rounded-2xl bg-[#f1f3f2]/60 border border-[#e2e7e6]">
+              <div className="flex items-center justify-between text-sm font-bold text-[#10181c] mb-1">
+                <span>🔗 Connected Social Channels</span>
+                <span className="text-xs text-[#0e7c66] font-semibold">Cooldown Page</span>
+              </div>
+              <div className="flex flex-wrap gap-2 text-xs pt-1">
+                {draftData.zomatoUrl && (
+                  <span className="px-2 py-0.5 rounded-md bg-[#E23744]/10 text-[#E23744] font-semibold">
+                    Zomato Active
+                  </span>
+                )}
+                {draftData.swiggyUrl && (
+                  <span className="px-2 py-0.5 rounded-md bg-[#FC8019]/10 text-[#FC8019] font-semibold">
+                    Swiggy Active
+                  </span>
+                )}
+                {draftData.instagramUrl && (
+                  <span className="px-2 py-0.5 rounded-md bg-pink-100 text-pink-700 font-semibold">
+                    Instagram Active
+                  </span>
+                )}
+              </div>
             </div>
           )}
         </div>

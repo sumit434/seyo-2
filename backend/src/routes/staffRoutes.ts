@@ -5,6 +5,7 @@ import { MemoryDB } from '../db/MemoryDB';
 import { staffAuthMiddleware, AuthenticatedStaffRequest } from '../middleware/staffMiddleware';
 import { maskMobile, extractConfiguredPin } from '../utils/crypto';
 import { Offer } from '../../../shared/types/offer';
+import { validateTierConfiguration } from '../../../shared/validation/offerValidation';
 
 const router = Router();
 const staffService = new StaffService();
@@ -201,6 +202,66 @@ router.get('/offer-history', staffAuthMiddleware, (req: AuthenticatedStaffReques
     next(err);
   }
 });
+
+// Activate new offer/campaign for the business matching its tier plan
+router.post('/activate-offer', staffAuthMiddleware, (req: AuthenticatedStaffRequest, res: Response, next) => {
+  try {
+    const businessId = req.staffSession!.businessId;
+    const business = db.getBusinessById(businessId);
+    if (!business) {
+      return res.status(404).json({ success: false, message: 'Business not found' });
+    }
+
+    const {
+      title,
+      description,
+      spinWheelConfiguration,
+      loyaltyTarget,
+      loyaltyValidationDays,
+      loyaltyReward,
+      googleReviewUrl,
+    } = req.body;
+
+    if (!title || !title.trim()) {
+      return res.status(400).json({ success: false, message: 'Offer/Campaign title is required' });
+    }
+
+    // Validate tier plan specific configuration
+    const valResult = validateTierConfiguration(business.tier, {
+      spinWheelConfiguration: spinWheelConfiguration || business.spinWheelConfiguration,
+      loyaltyTarget: loyaltyTarget !== undefined ? Number(loyaltyTarget) : business.loyaltyTarget,
+      loyaltyValidationDays: loyaltyValidationDays !== undefined ? Number(loyaltyValidationDays) : business.loyaltyValidationDays,
+      loyaltyReward: loyaltyReward || business.loyaltyReward,
+      googleReviewUrl: googleReviewUrl || business.googleReviewUrl,
+    });
+
+    if (!valResult.valid) {
+      return res.status(400).json({ success: false, message: valResult.error });
+    }
+
+    const newOffer = staffService.createAndActivateOffer(businessId, {
+      title,
+      description,
+      spinWheelConfiguration,
+      loyaltyTarget: loyaltyTarget !== undefined ? Number(loyaltyTarget) : undefined,
+      loyaltyValidationDays: loyaltyValidationDays !== undefined ? Number(loyaltyValidationDays) : undefined,
+      loyaltyReward,
+      googleReviewUrl,
+    });
+
+    res.json({
+      success: true,
+      message: 'New offer successfully activated!',
+      offer: newOffer,
+    });
+  } catch (err: any) {
+    if (err.message && err.message.startsWith('ACTIVE_OFFER_EXISTS')) {
+      return res.status(409).json({ success: false, message: err.message });
+    }
+    next(err);
+  }
+});
+
 
 // Helper route to generate standalone QR code for any URL
 router.get('/qr-code', async (req: Request, res: Response, next) => {

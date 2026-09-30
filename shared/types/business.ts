@@ -23,6 +23,9 @@ export interface Business {
   category: string;
   googleReviewUrl?: string;
   googlePlaceId?: string;
+  zomatoUrl?: string;
+  swiggyUrl?: string;
+  instagramUrl?: string;
   loyaltyTarget?: number; // 3-365
   loyaltyValidationDays?: number; // 3-365 (independent from loyaltyTarget)
   loyaltyReward?: string;
@@ -48,4 +51,7 @@ export interface BusinessPublicInfo {
   logoEmoji: string;
   logoUrl?: string;
   accentColor: string;
+  zomatoUrl?: string;
+  swiggyUrl?: string;
+  instagramUrl?: string;
 }

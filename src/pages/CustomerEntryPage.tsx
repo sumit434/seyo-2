@@ -94,6 +94,32 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
     loadCustomerJourney();
   }, [slug]);
 
+  // When user returns to tab after completing Google Review form or backgrounding browser
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'visible') {
+        const storedToken = sessionStorage.getItem(`seyo_customer_session_${slug}`);
+        const storedCustomerId = sessionStorage.getItem(`seyo_customer_id_${slug}`);
+        if (storedToken && storedCustomerId) {
+          try {
+            const updated = await customerService.getStatus(slug, storedToken, storedCustomerId);
+            setStatusData(updated);
+          } catch {
+            // silent fail on visibility refresh
+          }
+        }
+      }
+    };
+
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleVisibilityChange);
+    };
+  }, [slug]);
+
   if (loading) {
     return <LoadingScreen message="Connecting to rewards station..." />;
   }
@@ -198,6 +224,7 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
           }}
           businessName={business.name}
           businessId={business.id}
+          customerId={customer.id}
           onRedeemed={async () => {
             const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
             setStatusData(updated);
@@ -235,6 +262,7 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
           }}
           businessName={business.name}
           businessId={business.id}
+          customerId={customer.id}
           onRedeemed={async () => {
             const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
             setStatusData(updated);
@@ -267,14 +295,14 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
         />
       )}
 
-      {/* STAGE 5: REVIEW GENERATOR (If tier has review and not completed yet) */}
-      {status.currentStage === 'review' && offer.googleReviewUrl && (
+      {/* STAGE 5: REVIEW GENERATOR (Review accelerator tier or add-on for first-time review entry) */}
+      {status.currentStage === 'review' && (
         <ReviewGenerator
           businessId={business.id}
           businessName={business.name}
           customerId={customer.id}
           customerName={customer.name}
-          googleReviewUrl={offer.googleReviewUrl}
+          googleReviewUrl={offer.googleReviewUrl || business.googleReviewUrl || `https://maps.google.com/?q=${encodeURIComponent(business.name)}`}
           onReviewCompleted={async () => {
             const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
             setStatusData(updated);
@@ -289,6 +317,14 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
           businessSlug={business.slug}
           logoEmoji={business.logoEmoji}
           accentColor={business.accentColor}
+          visitCount={customer.visitCount}
+          loyaltyTarget={offer.loyaltyTarget || 6}
+          totalVisits={customer.totalVisits}
+          loyaltyRewardTitle={offer.loyaltyReward}
+          tier={business.tier}
+          zomatoUrl={business.zomatoUrl}
+          swiggyUrl={business.swiggyUrl}
+          instagramUrl={business.instagramUrl}
           onRefresh={loadCustomerJourney}
         />
       )}

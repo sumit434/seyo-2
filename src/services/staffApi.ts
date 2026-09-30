@@ -58,6 +58,17 @@ export const staffApi = {
     });
   },
 
+  // Activate new campaign/offer matching tier plan
+  async activateOffer(sessionToken: string, offerData: any) {
+    return request<{ success: boolean; message: string; offer: any }>('/api/staff/activate-offer', {
+      method: 'POST',
+      headers: {
+        'x-staff-session': sessionToken,
+      },
+      body: JSON.stringify(offerData),
+    });
+  },
+
   // Standalone QR code generation
   async getQrCode(url: string) {
     return request<{ success: boolean; qrDataUrl: string }>(`/api/staff/qr-code?url=${encodeURIComponent(url)}`);

@@ -40,6 +40,11 @@ export const customerService = {
     });
   },
 
+  // Alias for stampLoyalty
+  async addVisitStamp(businessId: string, customerId: string) {
+    return this.stampLoyalty(businessId, customerId);
+  },
+
   // Persist review before Google handoff
   async persistReview(businessId: string, customerId: string, rating: number, tags: string[], reviewText: string) {
     return request<{
@@ -78,6 +83,14 @@ export const customerService = {
     }>('/api/customer/voucher/redeem', {
       method: 'POST',
       body: JSON.stringify({ businessId, voucherCode, staffPin }),
+    });
+  },
+
+  // Defer voucher to retain active in session while continuing journey to review check
+  async deferVoucher(businessId: string, customerId: string) {
+    return request<CustomerStatusResponse>('/api/customer/voucher/defer', {
+      method: 'POST',
+      body: JSON.stringify({ businessId, customerId }),
     });
   },
 };
