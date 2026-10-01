@@ -191,4 +191,89 @@ export class CustomerAuthService {
       auth0Token,
     };
   }
+
+  /**
+   * Direct customer identification from QR/NFC session (OTP completely removed)
+   */
+  public async identifyCustomer(
+    businessId: string,
+    mobile: string,
+    name?: string,
+    countryCode: string = '+1',
+    existingSession?: CustomerSession
+  ): Promise<{
+    customer: Customer;
+    isNew: boolean;
+    sessionToken: string;
+  }> {
+    const cleanMobile = mobile.replace(/\s+/g, '');
+    const fullMobile = cleanMobile.startsWith('+') ? cleanMobile : `${countryCode}${cleanMobile}`;
+
+    let customer = this.db.getCustomerByBusinessAndMobile(businessId, fullMobile);
+    let isNew = false;
+    const nowIso = new Date().toISOString();
+
+    if (!customer) {
+      // New Customer
+      isNew = true;
+      customer = {
+        id: `cust_${generateSecureToken(8)}`,
+        businessId,
+        mobile: fullMobile,
+        name: name && name.trim() ? name.trim() : 'Guest',
+        visitCount: 0,
+        totalVisits: 0,
+        totalRewardsClaimed: 0,
+        totalSpins: 0,
+        reviewJourneyCompleted: false,
+        createdAt: nowIso,
+        updatedAt: nowIso,
+      };
+      this.db.saveCustomer(customer);
+    } else {
+      if (name && name.trim() && (!customer.name || customer.name === 'Guest')) {
+        customer.name = name.trim();
+        customer.updatedAt = nowIso;
+        this.db.saveCustomer(customer);
+      }
+    }
+
+    // Bind or create customer session
+    let sessionToken: string;
+    if (existingSession) {
+      existingSession.customerId = customer.id;
+      existingSession.customerNumber = fullMobile;
+      existingSession.status = 'used';
+      existingSession.isUsed = true;
+      existingSession.usedAt = existingSession.usedAt || nowIso;
+      this.db.saveCustomerSession(existingSession);
+      sessionToken = existingSession.sessionToken;
+    } else {
+      const activeOffer = this.db.getActiveOfferByBusinessId(businessId);
+      sessionToken = generateSecureToken(32);
+      const session: CustomerSession = {
+        sessionId: `cs_${generateSecureToken(8)}`,
+        sessionToken,
+        sessionKey: `sk_${generateSecureToken(16)}`,
+        businessId,
+        offerId: activeOffer ? activeOffer.id : '',
+        customerId: customer.id,
+        customerNumber: fullMobile,
+        authType: 'qr',
+        currentStage: 'auth',
+        status: 'used',
+        isUsed: true,
+        usedAt: nowIso,
+        createdAt: nowIso,
+        expiresAt: new Date(Date.now() + CUSTOMER_SESSION_TTL_MS).toISOString(),
+      };
+      this.db.saveCustomerSession(session);
+    }
+
+    return {
+      customer,
+      isNew,
+      sessionToken,
+    };
+  }
 }

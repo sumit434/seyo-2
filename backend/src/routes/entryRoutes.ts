@@ -42,18 +42,18 @@ router.get('/resolve/:identifier', (req: Request, res: Response, next) => {
 
     if (sk) {
       if (!session) {
-        return res.status(400).json({
+        return res.status(403).json({
           success: false,
-          error: 'INVALID_SESSION_KEY',
-          message: 'This QR code or session is invalid. Please scan a new QR code.',
+          error: 'SESSION_EXPIRED',
+          message: 'Token already used or expired',
         });
       }
 
       if (new Date(session.expiresAt).getTime() < Date.now()) {
-        return res.status(400).json({
+        return res.status(403).json({
           success: false,
           error: 'SESSION_EXPIRED',
-          message: 'This QR code or session has expired. Please scan a new QR code.',
+          message: 'Token already used or expired',
         });
       }
 
@@ -61,7 +61,7 @@ router.get('/resolve/:identifier', (req: Request, res: Response, next) => {
         return res.status(403).json({
           success: false,
           error: 'SESSION_ALREADY_USED',
-          message: 'This QR/session has already been used. Please scan a new QR code.',
+          message: 'Token already used or expired',
         });
       }
 

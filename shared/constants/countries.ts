@@ -5,6 +5,7 @@ export interface CountryConfig {
   flagEmoji: string;
   defaultTimezone: string;
   timezones: string[];
+  phoneLength: number;
 }
 
 export const ALLOWED_COUNTRIES: CountryConfig[] = [
@@ -15,6 +16,7 @@ export const ALLOWED_COUNTRIES: CountryConfig[] = [
     flagEmoji: '🇺🇸',
     defaultTimezone: 'America/New_York',
     timezones: ['America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles', 'America/Anchorage', 'Pacific/Honolulu'],
+    phoneLength: 10,
   },
   {
     code: 'CN',
@@ -23,6 +25,7 @@ export const ALLOWED_COUNTRIES: CountryConfig[] = [
     flagEmoji: '🇨🇳',
     defaultTimezone: 'Asia/Shanghai',
     timezones: ['Asia/Shanghai', 'Asia/Urumqi'],
+    phoneLength: 11,
   },
   {
     code: 'DE',
@@ -31,6 +34,7 @@ export const ALLOWED_COUNTRIES: CountryConfig[] = [
     flagEmoji: '🇩🇪',
     defaultTimezone: 'Europe/Berlin',
     timezones: ['Europe/Berlin'],
+    phoneLength: 10,
   },
   {
     code: 'JP',
@@ -39,6 +43,7 @@ export const ALLOWED_COUNTRIES: CountryConfig[] = [
     flagEmoji: '🇯🇵',
     defaultTimezone: 'Asia/Tokyo',
     timezones: ['Asia/Tokyo'],
+    phoneLength: 10,
   },
   {
     code: 'GB',
@@ -47,6 +52,7 @@ export const ALLOWED_COUNTRIES: CountryConfig[] = [
     flagEmoji: '🇬🇧',
     defaultTimezone: 'Europe/London',
     timezones: ['Europe/London'],
+    phoneLength: 10,
   },
   {
     code: 'IN',
@@ -55,6 +61,7 @@ export const ALLOWED_COUNTRIES: CountryConfig[] = [
     flagEmoji: '🇮🇳',
     defaultTimezone: 'Asia/Kolkata',
     timezones: ['Asia/Kolkata'],
+    phoneLength: 10,
   },
   {
     code: 'FR',
@@ -63,6 +70,7 @@ export const ALLOWED_COUNTRIES: CountryConfig[] = [
     flagEmoji: '🇫🇷',
     defaultTimezone: 'Europe/Paris',
     timezones: ['Europe/Paris'],
+    phoneLength: 9,
   },
   {
     code: 'IT',
@@ -71,6 +79,7 @@ export const ALLOWED_COUNTRIES: CountryConfig[] = [
     flagEmoji: '🇮🇹',
     defaultTimezone: 'Europe/Rome',
     timezones: ['Europe/Rome'],
+    phoneLength: 10,
   },
   {
     code: 'RU',
@@ -79,6 +88,7 @@ export const ALLOWED_COUNTRIES: CountryConfig[] = [
     flagEmoji: '🇷🇺',
     defaultTimezone: 'Europe/Moscow',
     timezones: ['Europe/Moscow', 'Asia/Yekaterinburg', 'Asia/Novosibirsk', 'Asia/Vladivostok'],
+    phoneLength: 10,
   },
   {
     code: 'BR',
@@ -87,7 +97,17 @@ export const ALLOWED_COUNTRIES: CountryConfig[] = [
     flagEmoji: '🇧🇷',
     defaultTimezone: 'America/Sao_Paulo',
     timezones: ['America/Sao_Paulo', 'America/Manaus', 'America/Belem'],
+    phoneLength: 11,
   },
 ];
 
 export const ALLOWED_COUNTRY_NAMES = ALLOWED_COUNTRIES.map(c => c.name);
+
+export function getCountryPhoneLength(dialCodeOrCode: string): number {
+  if (!dialCodeOrCode) return 10;
+  const clean = dialCodeOrCode.trim();
+  const found = ALLOWED_COUNTRIES.find(
+    c => c.dialCode === clean || c.code.toLowerCase() === clean.toLowerCase() || clean.startsWith(c.dialCode)
+  );
+  return found?.phoneLength || 10;
+}

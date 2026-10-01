@@ -4,6 +4,7 @@ import { Award, Flame, Users } from 'lucide-react';
 interface LoyaltyRecord {
   id: string;
   name: string;
+  mobile?: string;
   mobileMasked: string;
   visitCount: number;
   target: number;
@@ -40,14 +41,15 @@ export const LoyaltyRecordsList: React.FC<LoyaltyRecordsListProps> = ({ records,
       <div className="bg-white rounded-3xl border border-[#e2e7e6] overflow-hidden shadow-xs divide-y divide-[#e2e7e6]">
         {records.map(rec => {
           const progressPercent = Math.min(100, Math.round((rec.visitCount / rec.target) * 100));
+          const fullMobile = rec.mobile || rec.mobileMasked;
 
           return (
             <div key={rec.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#f1f3f2]/30 transition-colors">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <h4 className="font-bold text-[#10181c] text-sm">{rec.name}</h4>
-                  <span className="font-mono text-xs text-[#6a787e] bg-[#f1f3f2] px-2 py-0.5 rounded-md">
-                    {rec.mobileMasked}
+                  <span className="font-mono text-xs text-[#10181c] font-semibold bg-[#f1f3f2] px-2.5 py-0.5 rounded-md border border-[#e2e7e6]">
+                    {fullMobile}
                   </span>
                 </div>
                 <p className="text-xs text-[#6a787e]">

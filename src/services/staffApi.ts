@@ -90,4 +90,33 @@ export const staffApi = {
       body: JSON.stringify({ entryId }),
     });
   },
+
+  // Update Merchant Profile and Branding
+  async updateProfile(
+    sessionToken: string,
+    profileData: {
+      name?: string;
+      logoEmoji?: string;
+      logoUrl?: string;
+      googleReviewUrl?: string;
+      instagramUrl?: string;
+      websiteUrl?: string;
+      facebookUrl?: string;
+      zomatoUrl?: string;
+      swiggyUrl?: string;
+      accentColor?: string;
+    }
+  ) {
+    return request<{
+      success: boolean;
+      message: string;
+      business: any;
+    }>('/api/staff/profile', {
+      method: 'PUT',
+      headers: {
+        'x-staff-session': sessionToken,
+      },
+      body: JSON.stringify(profileData),
+    });
+  },
 };

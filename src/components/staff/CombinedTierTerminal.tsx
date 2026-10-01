@@ -5,6 +5,7 @@ import { QRGenerator } from './QRGenerator';
 import { StaffPINModal } from './StaffPINModal';
 import { OfferHistoryList } from './OfferHistoryList';
 import { ActivateOfferModal } from './ActivateOfferModal';
+import { MerchantProfileTab } from './MerchantProfileTab';
 import { Button } from '../common/Button';
 import { Modal } from '../common/Modal';
 import { staffApi } from '../../services/staffApi';
@@ -25,6 +26,8 @@ import {
   History,
   Trash2,
   Plus,
+  QrCode,
+  Building2,
 } from 'lucide-react';
 
 interface CombinedTierTerminalProps {
@@ -57,10 +60,8 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
   const hasRewards = business.tier === 'spin' || isCombined;
   const hasReview = business.tier === 'review' || isCombined;
 
-  // Active view toggle for Combined or tier-specific default
-  const [activeTab, setActiveTab] = useState<'loyalty' | 'rewards' | 'qr' | 'reviews' | 'history'>(
-    hasLoyalty ? 'loyalty' : hasRewards ? 'rewards' : 'reviews'
-  );
+  // Active view toggle: QR & NFC Tags is the default active panel (first position)
+  const [activeTab, setActiveTab] = useState<'qr' | 'loyalty' | 'rewards' | 'reviews' | 'history' | 'profile'>('qr');
 
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [targetVoucherCode, setTargetVoucherCode] = useState<string | undefined>(undefined);
@@ -164,17 +165,6 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
               </div>
             </div>
           </div>
-
-          {/* Dedicated Voucher Redemption Action */}
-          <Button
-            onClick={() => handleOpenRedeem()}
-            variant="primary"
-            size="md"
-            className="gap-2 shadow-sm"
-          >
-            <Gift className="w-4 h-4" />
-            <span>Redeem Voucher</span>
-          </Button>
 
           <Button onClick={onLogout} variant="outline" size="md">
             Sign Out
@@ -348,6 +338,20 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
 
       {/* Navigation Tabs */}
       <div className="flex items-center gap-2 border-b border-[#e2e7e6] pb-2 overflow-x-auto">
+        {/* 1. QR & NFC Tags - FIRST / LEFTMOST */}
+        <button
+          type="button"
+          onClick={() => setActiveTab('qr')}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'qr'
+              ? 'bg-[#0e7c66] text-white shadow-sm'
+              : 'text-[#6a787e] hover:text-[#10181c] hover:bg-white'
+          }`}
+        >
+          <QrCode className="w-4 h-4" />
+          <span>QR & NFC Tags</span>
+        </button>
+
         {hasLoyalty && (
           <button
             type="button"
@@ -359,7 +363,7 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
             }`}
           >
             <Award className="w-4 h-4" />
-            <span>Loyalty Records ({loyaltyRecords.length})</span>
+            <span>Loyalty Records</span>
           </button>
         )}
 
@@ -374,21 +378,9 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
             }`}
           >
             <Gift className="w-4 h-4" />
-            <span>Reward History ({rewards.length})</span>
+            <span>Reward History</span>
           </button>
         )}
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('qr')}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
-            activeTab === 'qr'
-              ? 'bg-[#0e7c66] text-white shadow-sm'
-              : 'text-[#6a787e] hover:text-[#10181c] hover:bg-white'
-          }`}
-        >
-          <span>QR & NFC Tags</span>
-        </button>
 
         {hasReview && (
           <button
@@ -401,7 +393,7 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
             }`}
           >
             <Star className="w-4 h-4" />
-            <span>Customer Feedback ({reviews.length})</span>
+            <span>Customer Feedback</span>
           </button>
         )}
 
@@ -416,7 +408,21 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
           }`}
         >
           <History className="w-4 h-4" />
-          <span>Offer History ({offerHistory.length})</span>
+          <span>Offer History</span>
+        </button>
+
+        {/* 6. Merchant Profile / Branding - FAR RIGHT / END */}
+        <button
+          type="button"
+          onClick={() => setActiveTab('profile')}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'profile'
+              ? 'bg-[#0e7c66] text-white shadow-sm'
+              : 'text-[#6a787e] hover:text-[#10181c] hover:bg-white'
+          }`}
+        >
+          <Building2 className="w-4 h-4" />
+          <span>Merchant Profile</span>
         </button>
       </div>
 
@@ -478,6 +484,14 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
 
       {activeTab === 'history' && (
         <OfferHistoryList offers={offerHistory} />
+      )}
+
+      {activeTab === 'profile' && (
+        <MerchantProfileTab
+          business={business}
+          sessionToken={sessionToken}
+          onUpdated={handleRefresh}
+        />
       )}
 
       {/* Staff PIN Modal */}

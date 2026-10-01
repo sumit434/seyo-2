@@ -26,6 +26,8 @@ export interface Business {
   zomatoUrl?: string;
   swiggyUrl?: string;
   instagramUrl?: string;
+  websiteUrl?: string;
+  facebookUrl?: string;
   loyaltyTarget?: number; // 3-365
   loyaltyValidationDays?: number; // 3-365 (independent from loyaltyTarget)
   loyaltyReward?: string;
@@ -54,4 +56,7 @@ export interface BusinessPublicInfo {
   zomatoUrl?: string;
   swiggyUrl?: string;
   instagramUrl?: string;
+  websiteUrl?: string;
+  facebookUrl?: string;
+  googleReviewUrl?: string;
 }

@@ -163,15 +163,26 @@ router.get('/terminal-data', staffAuthMiddleware, async (req: AuthenticatedStaff
     }
 
     const customers = db.getCustomersByBusinessId(businessId);
-    const rewards = db.getRewardsByBusinessId(businessId);
+    const rawRewards = db.getRewardsByBusinessId(businessId);
+    const rewards = rawRewards.map(r => {
+      const cust = db.getCustomerById(r.customerId);
+      const fullMobile = cust?.mobile || r.customerMobileMasked || '';
+      return {
+        ...r,
+        customerName: cust?.name || r.customerName || 'Guest',
+        customerMobile: fullMobile,
+        customerMobileMasked: fullMobile,
+      };
+    });
     const reviews = db.getReviewLogsByBusinessId(businessId);
 
-    // Format loyalty records
+    // Format loyalty records - show complete mobile number for staff record log
     const loyaltyTarget = offer?.loyaltyTarget || business.loyaltyTarget || 6;
     const loyaltyRecords = customers.map(c => ({
       id: c.id,
       name: c.name || 'Guest',
-      mobileMasked: maskMobile(c.mobile),
+      mobile: c.mobile,
+      mobileMasked: c.mobile, // Full complete mobile number for staff record log
       visitCount: c.visitCount || 0,
       target: loyaltyTarget,
       totalVisits: c.totalVisits || 0,
@@ -465,6 +476,104 @@ router.get('/qr-code', async (req: Request, res: Response, next) => {
       color: { dark: '#10181c', light: '#ffffff' },
     });
     res.json({ success: true, qrDataUrl });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Update Merchant Profile and Branding (Protected, Isolated to authenticated merchant)
+router.put('/profile', staffAuthMiddleware, (req: AuthenticatedStaffRequest, res: Response, next) => {
+  try {
+    const businessId = req.staffSession!.businessId;
+    const business = db.getBusinessById(businessId);
+    if (!business) {
+      return res.status(404).json({ success: false, message: 'Business not found' });
+    }
+
+    const {
+      name,
+      logoEmoji,
+      logoUrl,
+      googleReviewUrl,
+      instagramUrl,
+      websiteUrl,
+      facebookUrl,
+      zomatoUrl,
+      swiggyUrl,
+      accentColor,
+    } = req.body;
+
+    if (name !== undefined) {
+      const cleanName = String(name).trim();
+      if (!cleanName) {
+        return res.status(400).json({ success: false, message: 'Business name cannot be empty' });
+      }
+      business.name = cleanName;
+    }
+
+    if (logoEmoji !== undefined) {
+      business.logoEmoji = String(logoEmoji).trim() || '🏪';
+    }
+
+    if (logoUrl !== undefined) {
+      business.logoUrl = String(logoUrl).trim();
+    }
+
+    if (googleReviewUrl !== undefined) {
+      business.googleReviewUrl = String(googleReviewUrl).trim();
+    }
+
+    if (instagramUrl !== undefined) {
+      business.instagramUrl = String(instagramUrl).trim();
+    }
+
+    if (websiteUrl !== undefined) {
+      (business as any).websiteUrl = String(websiteUrl).trim();
+    }
+
+    if (facebookUrl !== undefined) {
+      (business as any).facebookUrl = String(facebookUrl).trim();
+    }
+
+    if (zomatoUrl !== undefined) {
+      business.zomatoUrl = String(zomatoUrl).trim();
+    }
+
+    if (swiggyUrl !== undefined) {
+      business.swiggyUrl = String(swiggyUrl).trim();
+    }
+
+    if (accentColor !== undefined && accentColor) {
+      business.accentColor = String(accentColor).trim();
+    }
+
+    business.updatedAt = new Date().toISOString();
+    db.saveBusiness(business);
+
+    res.json({
+      success: true,
+      message: 'Merchant profile and branding updated successfully',
+      business: {
+        id: business.id,
+        name: business.name,
+        slug: business.slug,
+        email: business.email,
+        tier: business.tier,
+        category: business.category,
+        city: business.city,
+        country: business.country,
+        timezone: business.timezone,
+        logoEmoji: business.logoEmoji,
+        logoUrl: business.logoUrl,
+        accentColor: business.accentColor,
+        googleReviewUrl: business.googleReviewUrl,
+        instagramUrl: business.instagramUrl,
+        websiteUrl: (business as any).websiteUrl,
+        facebookUrl: (business as any).facebookUrl,
+        zomatoUrl: business.zomatoUrl,
+        swiggyUrl: business.swiggyUrl,
+      },
+    });
   } catch (err) {
     next(err);
   }

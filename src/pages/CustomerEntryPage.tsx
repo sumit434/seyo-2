@@ -96,7 +96,19 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
         });
       }
     } catch (err: any) {
-      setError(err.message || 'Could not load rewards experience.');
+      const is403 =
+        err.status === 403 ||
+        err.code === 'SESSION_ALREADY_USED' ||
+        err.data?.error === 'SESSION_ALREADY_USED' ||
+        err.message?.toLowerCase().includes('already used') ||
+        err.message?.toLowerCase().includes('expired') ||
+        err.message?.includes('403');
+
+      if (is403) {
+        setError('Token already used or expired');
+      } else {
+        setError(err.message || 'Could not load rewards experience.');
+      }
     } finally {
       setLoading(false);
     }
@@ -137,11 +149,17 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
   }
 
   if (error) {
+    const isSession403 =
+      error === 'Token already used or expired' ||
+      error.toLowerCase().includes('already used') ||
+      error.toLowerCase().includes('expired') ||
+      error.includes('403');
+
     return (
       <ErrorMessage
-        title="Unable to Connect"
-        message={error}
-        onRetry={loadCustomerJourney}
+        title={isSession403 ? "Token already used or expired" : "Unable to Connect"}
+        message={isSession403 ? "Token already used or expired" : error}
+        onRetry={isSession403 ? undefined : loadCustomerJourney}
       />
     );
   }

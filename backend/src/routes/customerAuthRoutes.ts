@@ -3,6 +3,7 @@ import { CustomerAuthService } from '../services/customerAuthService';
 import { CustomerStatusService } from '../services/customerStatusService';
 import { MemoryDB } from '../db/MemoryDB';
 import { normalizePhone } from '../utils/crypto';
+import { getCountryPhoneLength } from '../../../shared/constants/countries';
 
 const router = Router();
 const authService = new CustomerAuthService();
@@ -26,23 +27,25 @@ router.post(['/otp/request', '/customer/otp/request'], async (req: Request, res:
       });
     }
 
+    const nationalDigits = String(mobile).replace(/\D/g, '');
+    const expectedLen = getCountryPhoneLength(countryCode || '+1');
+    if (nationalDigits.length !== expectedLen) {
+      return res.status(400).json({
+        success: false,
+        error: 'INVALID_MOBILE_LENGTH',
+        message: `Mobile number must be exactly ${expectedLen} digits for ${countryCode || '+1'}.`,
+      });
+    }
+
     const cleanMobile = mobile.replace(/\s+/g, '');
     const fullMobile = cleanMobile.startsWith('+') ? cleanMobile : `${countryCode || '+1'}${cleanMobile}`;
 
     const session = db.getCustomerSession(tokenOrKey);
-    if (!session) {
-      return res.status(400).json({
-        success: false,
-        error: 'INVALID_SESSION_KEY',
-        message: 'This QR code or session is invalid. Please scan a new QR code.',
-      });
-    }
-
-    if (new Date(session.expiresAt).getTime() < Date.now()) {
-      return res.status(400).json({
+    if (!session || new Date(session.expiresAt).getTime() < Date.now()) {
+      return res.status(403).json({
         success: false,
         error: 'SESSION_EXPIRED',
-        message: 'This QR code or session has expired. Please scan a new QR code.',
+        message: 'Token already used or expired',
       });
     }
 
@@ -50,7 +53,7 @@ router.post(['/otp/request', '/customer/otp/request'], async (req: Request, res:
       return res.status(403).json({
         success: false,
         error: 'SESSION_ALREADY_USED',
-        message: 'This QR/session has already been used. Please scan a new QR code.',
+        message: 'Token already used or expired',
       });
     }
 
@@ -61,7 +64,7 @@ router.post(['/otp/request', '/customer/otp/request'], async (req: Request, res:
         return res.status(403).json({
           success: false,
           error: 'SESSION_ALREADY_USED',
-          message: 'This QR/session has already been used. Please scan a new QR code.',
+          message: 'Token already used or expired',
         });
       }
     }
@@ -73,12 +76,12 @@ router.post(['/otp/request', '/customer/otp/request'], async (req: Request, res:
   }
 });
 
-// Verify OTP
-router.post(['/otp/verify', '/customer/otp/verify'], async (req: Request, res: Response, next) => {
+// Direct Customer Entry (OTP completely removed from customer flow)
+router.post(['/identify', '/customer/identify'], async (req: Request, res: Response, next) => {
   try {
-    const { businessId, mobile, otp, name, countryCode, sessionKey, sessionToken } = req.body;
-    if (!businessId || !mobile || !otp) {
-      return res.status(400).json({ success: false, message: 'businessId, mobile, and otp are required' });
+    const { businessId, mobile, name, countryCode, sessionKey, sessionToken } = req.body;
+    if (!businessId || !mobile) {
+      return res.status(400).json({ success: false, message: 'businessId and mobile are required' });
     }
 
     const tokenOrKey = sessionKey || sessionToken || (req.headers['x-customer-session'] as string);
@@ -90,32 +93,34 @@ router.post(['/otp/verify', '/customer/otp/verify'], async (req: Request, res: R
       });
     }
 
+    const nationalDigits = String(mobile).replace(/\D/g, '');
+    const expectedLen = getCountryPhoneLength(countryCode || '+1');
+    if (nationalDigits.length !== expectedLen) {
+      return res.status(400).json({
+        success: false,
+        error: 'INVALID_MOBILE_LENGTH',
+        message: `Mobile number must be exactly ${expectedLen} digits for ${countryCode || '+1'}.`,
+      });
+    }
+
     const cleanMobile = mobile.replace(/\s+/g, '');
     const fullMobile = cleanMobile.startsWith('+') ? cleanMobile : `${countryCode || '+1'}${cleanMobile}`;
 
     // Atomically claim or validate sessionKey
     const claimResult = db.claimSessionKey(tokenOrKey, fullMobile);
     if (!claimResult.success) {
-      if (claimResult.reason === 'SESSION_EXPIRED') {
-        return res.status(400).json({
-          success: false,
-          error: 'SESSION_EXPIRED',
-          message: 'This QR code or session has expired. Please scan a new QR code.',
-        });
-      }
       return res.status(403).json({
         success: false,
-        error: 'SESSION_ALREADY_USED',
-        message: 'This QR/session has already been used. Please scan a new QR code.',
+        error: claimResult.reason === 'SESSION_EXPIRED' ? 'SESSION_EXPIRED' : 'SESSION_ALREADY_USED',
+        message: 'Token already used or expired',
       });
     }
 
     const session = claimResult.session!;
 
-    const { customer, isNew, sessionToken: finalSessionToken } = await authService.verifyOtp(
+    const { customer, isNew, sessionToken: finalSessionToken } = await authService.identifyCustomer(
       businessId,
       mobile,
-      otp,
       name,
       countryCode,
       session
@@ -131,6 +136,85 @@ router.post(['/otp/verify', '/customer/otp/verify'], async (req: Request, res: R
       sessionToken: finalSessionToken,
       sessionKey: session.sessionKey,
       isNew,
+      ...statusPayload,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Verify OTP / Direct Auth Route
+router.post(['/otp/verify', '/customer/otp/verify'], async (req: Request, res: Response, next) => {
+  try {
+    const { businessId, mobile, otp, name, countryCode, sessionKey, sessionToken } = req.body;
+    if (!businessId || !mobile) {
+      return res.status(400).json({ success: false, message: 'businessId and mobile are required' });
+    }
+
+    const tokenOrKey = sessionKey || sessionToken || (req.headers['x-customer-session'] as string);
+    if (!tokenOrKey) {
+      return res.status(400).json({
+        success: false,
+        error: 'SESSION_REQUIRED',
+        message: 'A valid QR or NFC session is required. Please scan the QR code.',
+      });
+    }
+
+    const nationalDigits = String(mobile).replace(/\D/g, '');
+    const expectedLen = getCountryPhoneLength(countryCode || '+1');
+    if (nationalDigits.length !== expectedLen) {
+      return res.status(400).json({
+        success: false,
+        error: 'INVALID_MOBILE_LENGTH',
+        message: `Mobile number must be exactly ${expectedLen} digits for ${countryCode || '+1'}.`,
+      });
+    }
+
+    const cleanMobile = mobile.replace(/\s+/g, '');
+    const fullMobile = cleanMobile.startsWith('+') ? cleanMobile : `${countryCode || '+1'}${cleanMobile}`;
+
+    // Atomically claim or validate sessionKey
+    const claimResult = db.claimSessionKey(tokenOrKey, fullMobile);
+    if (!claimResult.success) {
+      return res.status(403).json({
+        success: false,
+        error: claimResult.reason === 'SESSION_EXPIRED' ? 'SESSION_EXPIRED' : 'SESSION_ALREADY_USED',
+        message: 'Token already used or expired',
+      });
+    }
+
+    const session = claimResult.session!;
+
+    let customerResult;
+    if (otp && otp.trim()) {
+      customerResult = await authService.verifyOtp(
+        businessId,
+        mobile,
+        otp,
+        name,
+        countryCode,
+        session
+      );
+    } else {
+      customerResult = await authService.identifyCustomer(
+        businessId,
+        mobile,
+        name,
+        countryCode,
+        session
+      );
+    }
+
+    const business = db.getBusinessById(businessId);
+    const offer = db.getActiveOfferByBusinessId(businessId);
+
+    const statusPayload = statusService.formatStatusResponse(business!, offer || null, customerResult.customer, session.entryType);
+
+    res.json({
+      success: true,
+      sessionToken: customerResult.sessionToken,
+      sessionKey: session.sessionKey,
+      isNew: customerResult.isNew,
       ...statusPayload,
     });
   } catch (err) {

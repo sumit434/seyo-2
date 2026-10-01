@@ -44,7 +44,7 @@ export const RewardRecordsList: React.FC<RewardRecordsListProps> = ({ rewards, o
                 </div>
                 <h4 className="font-bold text-[#10181c] text-sm">{rew.title}</h4>
                 <p className="text-xs text-[#6a787e]">
-                  Issued to: <span className="font-semibold text-[#10181c]">{rew.customerName || 'Guest'}</span> ({rew.customerMobileMasked || 'Mobile'})
+                  Issued to: <span className="font-semibold text-[#10181c]">{rew.customerName || 'Guest'}</span> ({rew.customerMobileMasked || (rew as any).customerMobile || 'Mobile'})
                 </p>
               </div>
 
