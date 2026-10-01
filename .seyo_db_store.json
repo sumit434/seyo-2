@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-09-30T11:09:40.042Z",
+  "savedAt": "2026-10-01T07:53:33.138Z",
   "businesses": [
     {
       "id": "biz_bella_napoli",
@@ -274,13 +274,13 @@
       "loyaltyReward": "Free Wood-Fired Margherita Pizza",
       "googleReviewUrl": "https://maps.google.com/?q=Bella+Napoli+Pizza+NY",
       "metrics": {
-        "scans": 142,
+        "scans": 175,
         "identifiedGuests": 89,
-        "rewardsIssued": 54,
-        "rewardsRedeemed": 38,
+        "rewardsIssued": 56,
+        "rewardsRedeemed": 39,
         "reviewsPrompted": 45,
-        "reviewsPersisted": 42,
-        "loyaltyStampsIssued": 98,
+        "reviewsPersisted": 43,
+        "loyaltyStampsIssued": 99,
         "loyaltyMilestonesClaimed": 11
       }
     },
@@ -327,12 +327,12 @@
         }
       ],
       "metrics": {
-        "scans": 108,
+        "scans": 112,
         "identifiedGuests": 73,
-        "rewardsIssued": 77,
-        "rewardsRedeemed": 65,
+        "rewardsIssued": 78,
+        "rewardsRedeemed": 66,
         "reviewsPrompted": 0,
-        "reviewsPersisted": 0,
+        "reviewsPersisted": 1,
         "loyaltyStampsIssued": 0,
         "loyaltyMilestonesClaimed": 0
       },
@@ -597,6 +597,88 @@
       "createdAt": "2026-09-30T10:48:15.633Z",
       "updatedAt": "2026-09-30T10:48:19.366Z",
       "lastVisitAt": "2026-09-30T10:48:19.366Z"
+    },
+    {
+      "id": "cust_94b60f7ee55969f3",
+      "businessId": "biz_bella_napoli",
+      "mobile": "+15551111111",
+      "name": "Customer One",
+      "visitCount": 0,
+      "totalVisits": 0,
+      "totalRewardsClaimed": 0,
+      "totalSpins": 0,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-10-01T06:40:17.443Z",
+      "updatedAt": "2026-10-01T06:40:17.443Z"
+    },
+    {
+      "id": "cust_784b9937fabd9c12",
+      "businessId": "biz_bella_napoli",
+      "mobile": "+15552222222",
+      "name": "Customer Two",
+      "visitCount": 0,
+      "totalVisits": 0,
+      "totalRewardsClaimed": 0,
+      "totalSpins": 0,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-10-01T06:40:17.484Z",
+      "updatedAt": "2026-10-01T06:40:17.484Z"
+    },
+    {
+      "id": "cust_b415a3f77e7b9c3f",
+      "businessId": "biz_bella_napoli",
+      "mobile": "+15559990001",
+      "name": "Completion Tester",
+      "visitCount": 0,
+      "totalVisits": 0,
+      "totalRewardsClaimed": 0,
+      "totalSpins": 1,
+      "reviewJourneyCompleted": false,
+      "createdAt": "2026-10-01T06:40:26.617Z",
+      "updatedAt": "2026-10-01T06:40:26.623Z",
+      "lastSpinAt": "2026-10-01T06:40:26.623Z",
+      "activeVoucher": {
+        "rewardId": "rew_120d30c9430ebc70",
+        "code": "SY-57JYT",
+        "title": "Free Garlic Knots Basket",
+        "type": "spin",
+        "claimedAt": "2026-10-01T06:40:26.623Z"
+      }
+    },
+    {
+      "id": "cust_4fd53e8fbf4fb24d",
+      "businessId": "biz_bella_napoli",
+      "mobile": "+917021127377",
+      "name": "sumit",
+      "visitCount": 1,
+      "totalVisits": 1,
+      "totalRewardsClaimed": 0,
+      "totalSpins": 1,
+      "reviewJourneyCompleted": true,
+      "createdAt": "2026-10-01T06:42:04.059Z",
+      "updatedAt": "2026-10-01T06:42:18.403Z",
+      "lastSpinAt": "2026-10-01T06:42:07.325Z",
+      "lastVisitAt": "2026-10-01T06:42:16.579Z",
+      "hasEnteredReviewFlow": true,
+      "reviewAcceleratorEntryId": "rev_acc_6c6b50a178e02541",
+      "reviewJourneyCompletedAt": "2026-10-01T06:42:18.403Z"
+    },
+    {
+      "id": "cust_f0fb067443337cd7",
+      "businessId": "biz_tokyo_ramen",
+      "mobile": "+910000000022",
+      "name": "sumit",
+      "visitCount": 0,
+      "totalVisits": 0,
+      "totalRewardsClaimed": 0,
+      "totalSpins": 1,
+      "reviewJourneyCompleted": true,
+      "createdAt": "2026-10-01T07:26:35.390Z",
+      "updatedAt": "2026-10-01T07:26:49.883Z",
+      "lastSpinAt": "2026-10-01T07:26:38.534Z",
+      "hasEnteredReviewFlow": true,
+      "reviewAcceleratorEntryId": "rev_acc_af2cb017334543a9",
+      "reviewJourneyCompletedAt": "2026-10-01T07:26:49.883Z"
     }
   ],
   "rewards": [
@@ -681,6 +763,46 @@
       "claimedAt": "2026-09-30T10:45:56.803Z",
       "redeemedAt": "2026-09-30T10:46:04.663Z",
       "staffPinVerifiedBy": "Staff Terminal (Tokyo Ramen Lab)"
+    },
+    {
+      "id": "rew_120d30c9430ebc70",
+      "businessId": "biz_bella_napoli",
+      "customerId": "cust_b415a3f77e7b9c3f",
+      "customerName": "Completion Tester",
+      "customerMobileMasked": "******0001",
+      "code": "SY-57JYT",
+      "title": "Free Garlic Knots Basket",
+      "type": "spin",
+      "status": "issued",
+      "claimedAt": "2026-10-01T06:40:26.623Z"
+    },
+    {
+      "id": "rew_1267b29d77e7530f",
+      "businessId": "biz_bella_napoli",
+      "customerId": "cust_4fd53e8fbf4fb24d",
+      "customerName": "sumit",
+      "customerMobileMasked": "******7377",
+      "code": "SY-JCFD6",
+      "title": "Free Italian Tiramisu Slice",
+      "type": "spin",
+      "status": "redeemed",
+      "claimedAt": "2026-10-01T06:42:07.325Z",
+      "redeemedAt": "2026-10-01T06:42:15.090Z",
+      "staffPinVerifiedBy": "Staff Terminal (Bella Napoli Pizzeria)"
+    },
+    {
+      "id": "rew_a04c770e5b9323a2",
+      "businessId": "biz_tokyo_ramen",
+      "customerId": "cust_f0fb067443337cd7",
+      "customerName": "sumit",
+      "customerMobileMasked": "******0022",
+      "code": "SY-3QAZM",
+      "title": "Complimentary Ajitsuke Tamago (Egg)",
+      "type": "spin",
+      "status": "redeemed",
+      "claimedAt": "2026-10-01T07:26:38.534Z",
+      "redeemedAt": "2026-10-01T07:26:45.989Z",
+      "staffPinVerifiedBy": "Staff Terminal (Tokyo Ramen Lab)"
     }
   ],
   "reviewLogs": [
@@ -699,6 +821,34 @@
       "createdAt": "2026-09-20T10:24:19.228Z",
       "googleReviewOpenedAt": "2026-09-20T10:24:23.228Z",
       "status": "google_opened"
+    },
+    {
+      "id": "rev_aaaecaf6b97eb233",
+      "businessId": "biz_bella_napoli",
+      "customerId": "cust_4fd53e8fbf4fb24d",
+      "customerName": "sumit",
+      "reviewText": "Had an absolutely incredible experience at Bella Napoli Pizzeria! What stood out most was the amazing service, exceptional quality. Staff went above and beyond. Will definitely be recommending to friends and coming back soon!",
+      "rating": 5,
+      "tags": [
+        "Amazing Service",
+        "Exceptional Quality"
+      ],
+      "createdAt": "2026-10-01T06:42:18.274Z",
+      "status": "persisted"
+    },
+    {
+      "id": "rev_9999c5fc52d49e81",
+      "businessId": "biz_tokyo_ramen",
+      "customerId": "cust_f0fb067443337cd7",
+      "customerName": "sumit",
+      "reviewText": "Had an absolutely incredible experience at Tokyo Ramen Lab! What stood out most was the amazing service, exceptional quality. Staff went above and beyond. Will definitely be recommending to friends and coming back soon!",
+      "rating": 5,
+      "tags": [
+        "Amazing Service",
+        "Exceptional Quality"
+      ],
+      "createdAt": "2026-10-01T07:26:49.767Z",
+      "status": "persisted"
     }
   ],
   "merchantEntries": [
@@ -707,7 +857,7 @@
       "businessId": "biz_bella_napoli",
       "businessSlug": "bella-napoli",
       "entryType": "merchant_qr",
-      "label": "Main Counter Printed QR",
+      "label": "Dynamic QR",
       "permanentCode": "BN-QR-COUNTER",
       "targetTier": "combined",
       "createdAt": "2026-09-30T10:24:19.228Z"
@@ -716,8 +866,8 @@
       "id": "entry_bella_nfc",
       "businessId": "biz_bella_napoli",
       "businessSlug": "bella-napoli",
-      "entryType": "nfc_tag",
-      "label": "Table 10 Tap NFC Disk",
+      "entryType": "combined",
+      "label": "Physical NFC Tag",
       "permanentCode": "BN-NFC-T10",
       "targetTier": "combined",
       "createdAt": "2026-09-30T10:24:19.228Z"
@@ -726,8 +876,8 @@
       "id": "entry_bella_instant_loyalty",
       "businessId": "biz_bella_napoli",
       "businessSlug": "bella-napoli",
-      "entryType": "instant_loyalty",
-      "label": "Express Loyalty Scan Card",
+      "entryType": "loyalty",
+      "label": "Express Loyalty NFC Tag",
       "permanentCode": "BN-LOYALTY-EXPRESS",
       "targetTier": "combined",
       "createdAt": "2026-09-30T10:24:19.228Z"
@@ -815,243 +965,64 @@
   ],
   "customerSessions": [
     {
-      "sessionId": "cs_b62db41d626934d7",
-      "sessionToken": "ec6a2a61c7ca8bb754a9af6754241507e7cbbb5fe0d6e691386aa8bc509dfa45",
-      "businessId": "biz_tokyo_ramen",
-      "offerId": "off_tokyo_spin",
-      "customerId": "cust_dba0f6729b81b8a2",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:39:45.396Z",
-      "expiresAt": "2026-09-30T11:09:45.396Z"
-    },
-    {
-      "sessionId": "cs_298b0e8f4522edd9",
-      "sessionToken": "dc2ceb8cc79c0d23048e1b2d04784d6bd9302ec4c338b6b2baeea64d64ddf6f3",
-      "businessId": "biz_tokyo_ramen",
-      "offerId": "off_tokyo_spin",
-      "customerId": "cust_dba0f6729b81b8a2",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:39:47.107Z",
-      "expiresAt": "2026-09-30T11:09:47.107Z"
-    },
-    {
-      "sessionId": "cs_1cec5824b35bedde",
-      "sessionToken": "3850f9030475c22e03468158cd14a30508768cc7434f590fa850f7b610006865",
-      "businessId": "biz_tokyo_ramen",
-      "offerId": "off_tokyo_spin",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:39:56.435Z",
-      "expiresAt": "2026-09-30T11:09:56.435Z"
-    },
-    {
-      "sessionId": "cs_21d62ef418047e0e",
-      "sessionToken": "48d8f60dc9b9bcac81649117f52e7a403f55eded63e1a6fd1f63cdf23cca7afa",
-      "businessId": "biz_tokyo_ramen",
-      "offerId": "off_tokyo_spin",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:39:58.027Z",
-      "expiresAt": "2026-09-30T11:09:58.027Z"
-    },
-    {
-      "sessionId": "cs_0e80722acba5ca21",
-      "sessionToken": "dd0c4a306c7c0f9370354b38ccfe6bb77925f0d5954fa7dae30e28964c385d64",
-      "businessId": "biz_683ee8bd43e543ee",
-      "offerId": "off_4d85146e199b463e",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:41:29.932Z",
-      "expiresAt": "2026-09-30T11:11:29.932Z"
-    },
-    {
-      "sessionId": "cs_5a9fdb44fef15360",
-      "sessionToken": "d807d26bb0e9fc2d4fb2d05ef899df9b1e8b8afac28ca504985e952f5130373a",
-      "businessId": "biz_683ee8bd43e543ee",
-      "offerId": "off_4d85146e199b463e",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:41:30.011Z",
-      "expiresAt": "2026-09-30T11:11:30.011Z"
-    },
-    {
-      "sessionId": "cs_bcb272e97479a737",
-      "sessionToken": "281e49c08f68e81adc7a547a277d13dc2bdf23c7d76170555042389af35f4327",
-      "businessId": "biz_683ee8bd43e543ee",
-      "offerId": "off_4d85146e199b463e",
-      "customerId": "cust_35dc1b96f0574b64",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:41:39.912Z",
-      "expiresAt": "2026-09-30T11:11:39.913Z"
-    },
-    {
-      "sessionId": "cs_b64606f93f1ca6a9",
-      "sessionToken": "55fd30b72af1a762ebb042d9c9eee70220d6aafe3679e9e6f11a8f7837a8a007",
-      "businessId": "biz_683ee8bd43e543ee",
-      "offerId": "off_4d85146e199b463e",
-      "customerId": "cust_35dc1b96f0574b64",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:41:41.639Z",
-      "expiresAt": "2026-09-30T11:11:41.639Z"
-    },
-    {
-      "sessionId": "cs_6c7c37f9d268f846",
-      "sessionToken": "de12b7c21d27beaf9ec0187a3a5866c98218f45f13d4acadfba256151d0cee5f",
-      "businessId": "biz_683ee8bd43e543ee",
-      "offerId": "off_4d85146e199b463e",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:41:51.069Z",
-      "expiresAt": "2026-09-30T11:11:51.069Z"
-    },
-    {
-      "sessionId": "cs_0c7391812baec93e",
-      "sessionToken": "26d3194cdbd13847106192c02dc04ef226f53fcd70b9d5ede776a3a0cba4bff2",
-      "businessId": "biz_tokyo_ramen",
-      "offerId": "off_tokyo_spin",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:45:29.178Z",
-      "expiresAt": "2026-09-30T11:15:29.178Z"
-    },
-    {
-      "sessionId": "cs_8bc7ad8841bd333d",
-      "sessionToken": "6bfbc4c01a732d3d4c7ffd2a708307fc0db47c380fd0fc8f1e67b1edb84ad523",
-      "businessId": "biz_tokyo_ramen",
-      "offerId": "off_tokyo_spin",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:45:29.255Z",
-      "expiresAt": "2026-09-30T11:15:29.255Z"
-    },
-    {
-      "sessionId": "cs_558a1e3bba0319ae",
-      "sessionToken": "19f33177ba6d43d6c3039caa13bc12975f246db3bef41de6200e1c6efe59571d",
-      "businessId": "biz_tokyo_ramen",
-      "offerId": "off_tokyo_spin",
-      "customerId": "cust_69b84f9c12d1492f",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:45:53.437Z",
-      "expiresAt": "2026-09-30T11:15:53.438Z"
-    },
-    {
-      "sessionId": "cs_12189c92fd8ecdac",
-      "sessionToken": "cfe3c10b6d0ee1d7ef2790e5361c6dca69590b5e39c62153ddaa18f45df56519",
-      "businessId": "biz_tokyo_ramen",
-      "offerId": "off_tokyo_spin",
-      "customerId": "cust_69b84f9c12d1492f",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:45:55.823Z",
-      "expiresAt": "2026-09-30T11:15:55.823Z"
-    },
-    {
-      "sessionId": "cs_98bf26e2630a66dc",
-      "sessionToken": "7e10ef50c830a4304edb09e99b7869a83c7c8464c138609eaa7e813f99a56458",
-      "businessId": "biz_tokyo_ramen",
-      "offerId": "off_tokyo_spin",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:46:05.624Z",
-      "expiresAt": "2026-09-30T11:16:05.624Z"
-    },
-    {
-      "sessionId": "cs_356b8b32d6c7adb8",
-      "sessionToken": "2003a82c2278b09e95713f24161519ee224aa13c53443d18bd8df45044d3d669",
-      "businessId": "biz_tokyo_ramen",
-      "offerId": "off_tokyo_spin",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:46:06.402Z",
-      "expiresAt": "2026-09-30T11:16:06.402Z"
-    },
-    {
-      "sessionId": "cs_1f6f592bd94abd04",
-      "sessionToken": "851bff0daa343920048318898ea09b4be0a024e14c810be53d80feb89c710408",
-      "businessId": "biz_tokyo_ramen",
-      "offerId": "off_tokyo_spin",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:46:08.438Z",
-      "expiresAt": "2026-09-30T11:16:08.438Z"
-    },
-    {
-      "sessionId": "cs_731206b24ef0b213",
-      "sessionToken": "ca6867587b533b7bcae65e044c5caeb1b1ec96f700a0c6497af6aa82081a6511",
+      "sessionId": "cs_00b4cf8d56b760c9",
+      "sessionToken": "277e4231105415b46d019110ee1754a31a791ada46efaa3341966fdb90be2967",
+      "sessionKey": "sk_fb42bbfb7a07f419cd0a7423f4e277b1",
       "businessId": "biz_28b207c5db2bdaa0",
       "offerId": "off_33fceacb5fbba46e",
       "authType": "qr",
       "currentStage": "auth",
+      "status": "unused",
       "isUsed": false,
-      "createdAt": "2026-09-30T10:48:06.739Z",
-      "expiresAt": "2026-09-30T11:18:06.739Z"
+      "createdAt": "2026-10-01T07:41:02.520Z",
+      "expiresAt": "2026-10-01T07:56:02.520Z"
     },
     {
-      "sessionId": "cs_7dc56695071f273c",
-      "sessionToken": "7c6a5625fcb3ab0ee63954e34714dc05bb2f2efaf8f961bea56c8db3b3c51b42",
-      "businessId": "biz_28b207c5db2bdaa0",
-      "offerId": "off_33fceacb5fbba46e",
+      "sessionId": "cs_e11f5edfdddfc228",
+      "sessionToken": "10ec702187fe99c6ffd6aab697cab4ff32e42b2d1722fd6f88ed60163d72f487",
+      "sessionKey": "sk_c4ffbef26240017346e726f0b45e92a3",
+      "businessId": "biz_bella_napoli",
+      "offerId": "off_bella_combined",
       "authType": "qr",
       "currentStage": "auth",
+      "status": "unused",
       "isUsed": false,
-      "createdAt": "2026-09-30T10:48:06.812Z",
-      "expiresAt": "2026-09-30T11:18:06.812Z"
+      "createdAt": "2026-10-01T07:53:01.999Z",
+      "expiresAt": "2026-10-01T08:08:01.999Z"
     },
     {
-      "sessionId": "cs_9a69efdc4e9c8a43",
-      "sessionToken": "b27765aea52a2d7b5864c616bdd00729c0a5364f3c51594bc9a8760559a1c6ae",
-      "businessId": "biz_28b207c5db2bdaa0",
-      "offerId": "off_33fceacb5fbba46e",
-      "customerId": "cust_812f5b6ec066394d",
-      "authType": "qr",
+      "id": "cs_316820686e5920c1",
+      "sessionId": "cs_316820686e5920c1",
+      "sessionToken": "3bbcb6a902b9d47ab702b564058e62c0faa05d84c1c871ac80e1a5ca7490187f",
+      "sessionKey": "nfc_4ffc035dabf1b8f00ca9a67857ab717f",
+      "businessId": "biz_bella_napoli",
+      "offerId": "off_bella_combined",
+      "authType": "nfc",
+      "source": "nfc",
+      "entryType": "loyalty",
+      "qrKey": null,
       "currentStage": "auth",
+      "status": "unused",
       "isUsed": false,
-      "createdAt": "2026-09-30T10:48:15.633Z",
-      "expiresAt": "2026-09-30T11:18:15.633Z"
+      "createdAt": "2026-10-01T07:53:26.892Z",
+      "expiresAt": "2026-10-01T08:08:26.892Z"
     },
     {
-      "sessionId": "cs_b7df84cf1f8b7403",
-      "sessionToken": "4013b22ce4e4a51bac62227398ea6b851b2d4ab9bf0ece81d39bff705b23e53c",
-      "businessId": "biz_28b207c5db2bdaa0",
-      "offerId": "off_33fceacb5fbba46e",
-      "customerId": "cust_812f5b6ec066394d",
-      "authType": "qr",
+      "id": "cs_6d41a13f88f3d859",
+      "sessionId": "cs_6d41a13f88f3d859",
+      "sessionToken": "117665ac679fea34ee6c3c55e25634c45f17a25e1a6cf7add7e07cd15bb41f9d",
+      "sessionKey": "nfc_f00934d9b46f9ec1a5013faacad89c05",
+      "businessId": "biz_bella_napoli",
+      "offerId": "off_bella_combined",
+      "authType": "nfc",
+      "source": "nfc",
+      "entryType": "loyalty",
+      "qrKey": null,
       "currentStage": "auth",
+      "status": "unused",
       "isUsed": false,
-      "createdAt": "2026-09-30T10:48:18.371Z",
-      "expiresAt": "2026-09-30T11:18:18.371Z"
-    },
-    {
-      "sessionId": "cs_69404e4ee82c0d94",
-      "sessionToken": "2a44eeefd440702ef48ad7c387740acde82433899243df9c34c334bd799bf9fc",
-      "businessId": "biz_28b207c5db2bdaa0",
-      "offerId": "off_33fceacb5fbba46e",
-      "authType": "qr",
-      "currentStage": "auth",
-      "isUsed": false,
-      "createdAt": "2026-09-30T10:48:26.309Z",
-      "expiresAt": "2026-09-30T11:18:26.309Z"
+      "createdAt": "2026-10-01T07:53:32.987Z",
+      "expiresAt": "2026-10-01T08:08:32.987Z"
     }
   ],
   "onboardingTokens": [
@@ -1271,6 +1242,78 @@
       "tier": "loyalty",
       "createdAt": "2026-09-30T10:47:53.256Z",
       "expiresAt": "2026-10-01T10:47:53.264Z"
+    },
+    {
+      "sessionId": "243ce434f59dd67615c41bdccfd3e5c7459466aae372953d99b1028433cbda7f",
+      "businessId": "biz_bella_napoli",
+      "businessName": "Bella Napoli Pizzeria",
+      "businessSlug": "bella-napoli",
+      "tier": "combined",
+      "createdAt": "2026-10-01T06:29:14.905Z",
+      "expiresAt": "2026-10-02T06:29:14.905Z"
+    },
+    {
+      "sessionId": "8cfb8a7a48811000631431fc2aca00f39f42f40e44636f7d1ac2655c7da4ebc4",
+      "businessId": "biz_bella_napoli",
+      "businessName": "Bella Napoli Pizzeria",
+      "businessSlug": "bella-napoli",
+      "tier": "combined",
+      "createdAt": "2026-10-01T06:40:17.311Z",
+      "expiresAt": "2026-10-02T06:40:17.311Z"
+    },
+    {
+      "sessionId": "c3a598bca612cefb68eef7bd45023d4b1f36375eb677642d1773a6918a4db8aa",
+      "businessId": "biz_bella_napoli",
+      "businessName": "Bella Napoli Pizzeria",
+      "businessSlug": "bella-napoli",
+      "tier": "combined",
+      "createdAt": "2026-10-01T06:40:26.581Z",
+      "expiresAt": "2026-10-02T06:40:26.581Z"
+    },
+    {
+      "sessionId": "161bb1648b104b4e0993812e299969838d0606fcb35e3a8ede21950896c0b21a",
+      "businessId": "biz_bella_napoli",
+      "businessName": "Bella Napoli Pizzeria",
+      "businessSlug": "bella-napoli",
+      "tier": "combined",
+      "createdAt": "2026-10-01T06:41:17.111Z",
+      "expiresAt": "2026-10-02T06:41:17.111Z"
+    },
+    {
+      "sessionId": "d13189009b07ee4184dda068cb64ddedb875105ed1fab4d674c5a97b75a1373d",
+      "businessId": "biz_tokyo_ramen",
+      "businessName": "Tokyo Ramen Lab",
+      "businessSlug": "tokyo-ramen",
+      "tier": "spin",
+      "createdAt": "2026-10-01T07:26:12.223Z",
+      "expiresAt": "2026-10-02T07:26:12.223Z"
+    },
+    {
+      "sessionId": "851fb74c7a0479f3ca6a72e6d1c12ce67d1a03ca1eb3d6b9679545c9396e882c",
+      "businessId": "biz_28b207c5db2bdaa0",
+      "businessName": "don3",
+      "businessSlug": "don3",
+      "tier": "loyalty",
+      "createdAt": "2026-10-01T07:41:01.407Z",
+      "expiresAt": "2026-10-02T07:41:01.407Z"
+    },
+    {
+      "sessionId": "ed919d32b41a8ded7f2a1eb9b95d524e2275db543faafca301dcdf70cbf0f719",
+      "businessId": "biz_bella_napoli",
+      "businessName": "Bella Napoli Pizzeria",
+      "businessSlug": "bella-napoli",
+      "tier": "combined",
+      "createdAt": "2026-10-01T07:52:54.836Z",
+      "expiresAt": "2026-10-02T07:52:54.836Z"
+    },
+    {
+      "sessionId": "80b97f13ec7f2b879544910ad035783efe33c3b08f3e6be30586091d9570e135",
+      "businessId": "biz_bella_napoli",
+      "businessName": "Bella Napoli Pizzeria",
+      "businessSlug": "bella-napoli",
+      "tier": "combined",
+      "createdAt": "2026-10-01T07:53:16.416Z",
+      "expiresAt": "2026-10-02T07:53:16.416Z"
     }
   ]
 }

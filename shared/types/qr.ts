@@ -1,7 +1,7 @@
 import { ProductTier } from '../constants/tiers';
 export type { TopRanker } from './customer';
 
-export type EntryType = 'merchant_qr' | 'nfc_tag' | 'table_qr' | 'review_nfc' | 'instant_loyalty';
+export type EntryType = 'merchant_qr' | 'nfc_tag' | 'table_qr' | 'review_nfc' | 'instant_loyalty' | 'combined' | 'loyalty';
 
 export interface MerchantEntry {
   id: string;
@@ -26,16 +26,25 @@ export type CustomerJourneyStage =
   | 'cooldown';
 
 export interface CustomerSession {
+  id?: string;
   sessionId: string;
   sessionToken: string; // Crypto hex token passed in Authorization or header
+  sessionKey: string;   // The short-lived unique QR/NFC session key
   businessId: string;
   offerId: string;
   customerId?: string;
+  customerNumber?: string;
   authType: 'qr' | 'nfc';
+  source?: 'qr' | 'nfc';
+  entryType?: 'combined' | 'loyalty' | string;
+  qrKey?: string | null;
   currentStage: CustomerJourneyStage;
+  status: 'unused' | 'used' | 'completed' | 'expired';
   isUsed: boolean;
   createdAt: string;
   expiresAt: string;
+  usedAt?: string;
+  completedAt?: string;
 }
 
 export interface CustomerStatusResponse {

@@ -3,23 +3,37 @@ import { CustomerStatusResponse, TopRanker } from '../../shared/types/qr';
 
 export const customerService = {
   // Resolve merchant entry from QR/NFC code or slug
-  async resolveEntry(identifier: string, type: 'qr' | 'nfc' = 'qr'): Promise<{
+  async resolveEntry(identifier: string, type: 'qr' | 'nfc' = 'qr', sessionKey?: string, entryType?: string): Promise<{
     success: boolean;
     isActive: boolean;
     sessionToken?: string;
+    sessionKey?: string;
     entryType?: string;
     message?: string;
   } & Partial<CustomerStatusResponse>> {
-    return request(`/api/entry/resolve/${encodeURIComponent(identifier)}?type=${type}`);
+    let url = `/api/entry/resolve/${encodeURIComponent(identifier)}?type=${type}`;
+    if (sessionKey) {
+      url += `&sk=${encodeURIComponent(sessionKey)}`;
+    }
+    if (entryType) {
+      url += `&entryType=${encodeURIComponent(entryType)}`;
+    }
+    return request(url);
   },
 
   // Refresh status
-  async getStatus(slug: string, sessionToken?: string, customerId?: string): Promise<CustomerStatusResponse> {
+  async getStatus(slug: string, sessionToken?: string, customerId?: string, entryType?: string): Promise<CustomerStatusResponse> {
     const headers: Record<string, string> = {};
     if (sessionToken) headers['x-customer-session'] = sessionToken;
     if (customerId) headers['x-customer-id'] = customerId;
+    if (entryType) headers['x-entry-type'] = entryType;
 
-    return request(`/api/customer/status/${encodeURIComponent(slug)}`, {
+    let url = `/api/customer/status/${encodeURIComponent(slug)}`;
+    if (entryType) {
+      url += `?entryType=${encodeURIComponent(entryType)}`;
+    }
+
+    return request(url, {
       headers,
     });
   },

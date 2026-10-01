@@ -73,4 +73,21 @@ export const staffApi = {
   async getQrCode(url: string) {
     return request<{ success: boolean; qrDataUrl: string }>(`/api/staff/qr-code?url=${encodeURIComponent(url)}`);
   },
+
+  // Refresh Dynamic Counter QR session key
+  async refreshQr(sessionToken: string, entryId?: string) {
+    return request<{
+      success: boolean;
+      sessionKey: string;
+      customerUrl: string;
+      qrDataUrl: string;
+      expiresAt: string;
+    }>('/api/staff/qr/refresh', {
+      method: 'POST',
+      headers: {
+        'x-staff-session': sessionToken,
+      },
+      body: JSON.stringify({ entryId }),
+    });
+  },
 };

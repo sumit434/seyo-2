@@ -436,7 +436,13 @@ export const CombinedTierTerminal: React.FC<CombinedTierTerminalProps> = ({
       )}
 
       {activeTab === 'qr' && (
-        <QRGenerator entries={entries} businessName={business.name} businessSlug={business.slug} />
+        <QRGenerator
+          entries={entries}
+          businessName={business.name}
+          businessSlug={business.slug}
+          businessTier={business.tier}
+          sessionToken={sessionToken}
+        />
       )}
 
       {activeTab === 'reviews' && hasReview && (

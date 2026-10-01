@@ -3,7 +3,7 @@ import { CustomerStatusResponse } from '../../shared/types/qr';
 
 export const customerAuthService = {
   // Request OTP for customer login
-  async requestOtp(businessId: string, mobile: string, countryCode: string = '+1') {
+  async requestOtp(businessId: string, mobile: string, countryCode: string = '+1', sessionKey?: string) {
     return request<{
       success: boolean;
       maskedMobile: string;
@@ -11,7 +11,7 @@ export const customerAuthService = {
       isExistingCustomer: boolean;
     }>('/api/auth/customer/otp/request', {
       method: 'POST',
-      body: JSON.stringify({ businessId, mobile, countryCode }),
+      body: JSON.stringify({ businessId, mobile, countryCode, sessionKey }),
     });
   },
 
@@ -21,15 +21,17 @@ export const customerAuthService = {
     mobile: string,
     otp: string,
     name?: string,
-    countryCode: string = '+1'
+    countryCode: string = '+1',
+    sessionKey?: string
   ): Promise<{
     success: boolean;
     sessionToken: string;
+    sessionKey?: string;
     isNew: boolean;
   } & CustomerStatusResponse> {
     return request('/api/auth/customer/otp/verify', {
       method: 'POST',
-      body: JSON.stringify({ businessId, mobile, otp, name, countryCode }),
+      body: JSON.stringify({ businessId, mobile, otp, name, countryCode, sessionKey }),
     });
   },
 };

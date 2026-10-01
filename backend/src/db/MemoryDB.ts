@@ -9,7 +9,8 @@ import { MerchantEntry, CustomerSession } from '../../../shared/types/qr';
 import { OnboardingToken, OnboardingSession } from '../../../shared/types/onboarding';
 import { StaffSession } from '../../../shared/types/session';
 import { createInitialSeedData } from './seed';
-import { hashPin, verifyPin } from '../utils/crypto';
+import { hashPin, verifyPin, generateSecureToken, normalizePhone } from '../utils/crypto';
+import { QR_SESSION_KEY_TTL_MS } from '../../../shared/constants/limits';
 
 const DB_FILE_PATH = path.resolve(process.cwd(), '.seyo_db_store.json');
 
@@ -25,6 +26,7 @@ export class MemoryDB {
   private merchantEntries: Map<string, MerchantEntry> = new Map(); // id -> MerchantEntry
   private merchantEntryCodeLookup: Map<string, string> = new Map(); // permanentCode -> id
   private customerSessions: Map<string, CustomerSession> = new Map(); // sessionToken -> CustomerSession
+  private sessionKeyLookup: Map<string, string> = new Map(); // sessionKey -> sessionToken
   private onboardingTokens: Map<string, OnboardingToken> = new Map(); // tokenHash -> OnboardingToken
   private onboardingSessions: Map<string, OnboardingSession> = new Map(); // sessionId -> OnboardingSession
   private staffSessions: Map<string, StaffSession> = new Map(); // sessionId -> StaffSession
@@ -89,7 +91,12 @@ export class MemoryDB {
           });
         }
         if (data.customerSessions && Array.isArray(data.customerSessions)) {
-          data.customerSessions.forEach((cs: CustomerSession) => this.customerSessions.set(cs.sessionToken, cs));
+          data.customerSessions.forEach((cs: CustomerSession) => {
+            this.customerSessions.set(cs.sessionToken, cs);
+            if (cs.sessionKey) {
+              this.sessionKeyLookup.set(cs.sessionKey, cs.sessionToken);
+            }
+          });
         }
         if (data.onboardingTokens && Array.isArray(data.onboardingTokens)) {
           data.onboardingTokens.forEach((ot: OnboardingToken) => this.onboardingTokens.set(ot.tokenHash, ot));
@@ -273,26 +280,148 @@ export class MemoryDB {
   }
 
   // --- CUSTOMER SESSION REPOSITORY METHODS ---
-  public getCustomerSession(token: string): CustomerSession | undefined {
-    const session = this.customerSessions.get(token);
+  public getCustomerSession(tokenOrKey: string): CustomerSession | undefined {
+    let session = this.customerSessions.get(tokenOrKey);
+    if (!session) {
+      const token = this.sessionKeyLookup.get(tokenOrKey);
+      if (token) {
+        session = this.customerSessions.get(token);
+      }
+    }
     if (!session) return undefined;
     if (session.expiresAt < new Date().toISOString()) {
-      this.customerSessions.delete(token);
-      this.scheduleSave();
+      this.deleteCustomerSession(session.sessionToken);
       return undefined;
     }
     return session;
   }
 
+  public getCustomerSessionByKey(sessionKey: string): CustomerSession | undefined {
+    const token = this.sessionKeyLookup.get(sessionKey);
+    if (token) {
+      return this.getCustomerSession(token);
+    }
+    for (const s of this.customerSessions.values()) {
+      if (s.sessionKey === sessionKey) {
+        return this.getCustomerSession(s.sessionToken);
+      }
+    }
+    return undefined;
+  }
+
   public saveCustomerSession(session: CustomerSession): CustomerSession {
     this.customerSessions.set(session.sessionToken, session);
+    if (session.sessionKey) {
+      this.sessionKeyLookup.set(session.sessionKey, session.sessionToken);
+    }
     this.scheduleSave();
     return session;
   }
 
   public deleteCustomerSession(token: string): void {
+    const session = this.customerSessions.get(token);
+    if (session?.sessionKey) {
+      this.sessionKeyLookup.delete(session.sessionKey);
+    }
     this.customerSessions.delete(token);
     this.scheduleSave();
+  }
+
+  public getActiveQrSessionForBusiness(businessId: string): CustomerSession | undefined {
+    const nowIso = new Date().toISOString();
+    for (const s of this.customerSessions.values()) {
+      if (
+        s.businessId === businessId &&
+        s.authType === 'qr' &&
+        s.status === 'unused' &&
+        s.expiresAt > nowIso
+      ) {
+        return s;
+      }
+    }
+    return undefined;
+  }
+
+  public invalidateUnusedQrSessions(businessId: string): void {
+    const nowIso = new Date().toISOString();
+    for (const s of this.customerSessions.values()) {
+      if (s.businessId === businessId && s.authType === 'qr' && s.status === 'unused') {
+        s.status = 'expired';
+        s.expiresAt = nowIso;
+      }
+    }
+    this.scheduleSave();
+  }
+
+  public createQrSession(businessId: string, offerId: string): CustomerSession {
+    const sessionToken = generateSecureToken(32);
+    const sessionKey = `sk_${generateSecureToken(16)}`;
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + QR_SESSION_KEY_TTL_MS).toISOString();
+
+    const sessionId = `cs_${generateSecureToken(8)}`;
+    const session: CustomerSession = {
+      id: sessionId,
+      sessionId,
+      sessionToken,
+      sessionKey,
+      businessId,
+      offerId,
+      authType: 'qr',
+      source: 'qr',
+      entryType: 'combined',
+      qrKey: sessionKey,
+      currentStage: 'auth',
+      status: 'unused',
+      isUsed: false,
+      createdAt: now.toISOString(),
+      expiresAt,
+    };
+
+    return this.saveCustomerSession(session);
+  }
+
+  public claimSessionKey(
+    sessionKeyOrToken: string,
+    customerNumber: string,
+    customerId?: string
+  ): { success: boolean; session?: CustomerSession; reason?: string } {
+    const session = this.getCustomerSession(sessionKeyOrToken);
+    if (!session) {
+      return { success: false, reason: 'INVALID_SESSION' };
+    }
+
+    if (new Date(session.expiresAt).getTime() < Date.now()) {
+      return { success: false, reason: 'SESSION_EXPIRED' };
+    }
+
+    if (session.status === 'completed') {
+      return { success: false, reason: 'ALREADY_USED' };
+    }
+
+    const cleanInputPhone = normalizePhone(customerNumber);
+    const cleanSessionPhone = normalizePhone(session.customerNumber || '');
+
+    if (session.status === 'used') {
+      if (cleanSessionPhone && cleanSessionPhone !== cleanInputPhone) {
+        return { success: false, reason: 'ALREADY_USED' };
+      }
+      if (customerId && !session.customerId) {
+        session.customerId = customerId;
+        this.saveCustomerSession(session);
+      }
+      return { success: true, session };
+    }
+
+    // Atomic claim of 'unused' session
+    session.customerNumber = customerNumber;
+    if (customerId) session.customerId = customerId;
+    session.status = 'used';
+    session.isUsed = true;
+    session.usedAt = new Date().toISOString();
+    this.saveCustomerSession(session);
+
+    return { success: true, session };
   }
 
   // --- REWARD REPOSITORY METHODS ---

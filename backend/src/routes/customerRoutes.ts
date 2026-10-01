@@ -32,6 +32,29 @@ function getCustomerFromReq(req: Request) {
   return undefined;
 }
 
+function getEntryTypeFromReq(req: Request): string | undefined {
+  const sessionToken = req.headers['x-customer-session'] as string;
+  if (sessionToken) {
+    const session = db.getCustomerSession(sessionToken);
+    if (session?.entryType) return session.entryType;
+  }
+  return (req.query.entryType as string) || (req.headers['x-entry-type'] as string) || req.body?.entryType;
+}
+
+function checkAndMarkSessionCompleted(req: Request, stage: string) {
+  if (stage === 'cooldown') {
+    const sessionToken = req.headers['x-customer-session'] as string;
+    if (sessionToken) {
+      const session = db.getCustomerSession(sessionToken);
+      if (session && session.status !== 'completed') {
+        session.status = 'completed';
+        session.completedAt = new Date().toISOString();
+        db.saveCustomerSession(session);
+      }
+    }
+  }
+}
+
 // Get customer status for a business
 router.get('/status/:slug', (req: Request, res: Response, next) => {
   try {
@@ -43,8 +66,10 @@ router.get('/status/:slug', (req: Request, res: Response, next) => {
 
     const offer = db.getActiveOfferByBusinessId(business.id) || null;
     const customer = getCustomerFromReq(req) || null;
+    const entryType = getEntryTypeFromReq(req);
 
-    const payload = statusService.formatStatusResponse(business, offer, customer);
+    const payload = statusService.formatStatusResponse(business, offer, customer, entryType);
+    checkAndMarkSessionCompleted(req, payload.status.currentStage);
     res.json({
       success: true,
       ...payload,
@@ -63,8 +88,10 @@ router.post('/spin', (req: Request, res: Response, next) => {
     const business = db.getBusinessById(businessId);
     const offer = db.getActiveOfferByBusinessId(businessId);
     const customer = db.getCustomerById(customerId);
+    const entryType = getEntryTypeFromReq(req);
 
-    const statusPayload = statusService.formatStatusResponse(business!, offer || null, customer!);
+    const statusPayload = statusService.formatStatusResponse(business!, offer || null, customer!, entryType);
+    checkAndMarkSessionCompleted(req, statusPayload.status.currentStage);
 
     res.json({
       success: true,
@@ -86,8 +113,10 @@ router.post('/loyalty/stamp', (req: Request, res: Response, next) => {
 
     const business = db.getBusinessById(businessId);
     const offer = db.getActiveOfferByBusinessId(businessId);
+    const entryType = getEntryTypeFromReq(req);
 
-    const statusPayload = statusService.formatStatusResponse(business!, offer || null, result.customer);
+    const statusPayload = statusService.formatStatusResponse(business!, offer || null, result.customer, entryType);
+    checkAndMarkSessionCompleted(req, statusPayload.status.currentStage);
 
     res.json({
       success: true,

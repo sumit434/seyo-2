@@ -83,7 +83,8 @@ export class CustomerAuthService {
     mobile: string,
     otpCode: string,
     name?: string,
-    countryCode: string = '+1'
+    countryCode: string = '+1',
+    existingSession?: CustomerSession
   ): Promise<{
     customer: Customer;
     isNew: boolean;
@@ -151,22 +152,37 @@ export class CustomerAuthService {
       }
     }
 
-    // Create short-lived customer session
-    const activeOffer = this.db.getActiveOfferByBusinessId(businessId);
-    const sessionToken = generateSecureToken(32);
-    const session: CustomerSession = {
-      sessionId: `cs_${generateSecureToken(8)}`,
-      sessionToken,
-      businessId,
-      offerId: activeOffer ? activeOffer.id : '',
-      customerId: customer.id,
-      authType: 'qr',
-      currentStage: 'auth',
-      isUsed: false,
-      createdAt: nowIso,
-      expiresAt: new Date(Date.now() + CUSTOMER_SESSION_TTL_MS).toISOString(),
-    };
-    this.db.saveCustomerSession(session);
+    // Bind or create customer session
+    let sessionToken: string;
+    if (existingSession) {
+      existingSession.customerId = customer.id;
+      existingSession.customerNumber = fullMobile;
+      existingSession.status = 'used';
+      existingSession.isUsed = true;
+      existingSession.usedAt = existingSession.usedAt || nowIso;
+      this.db.saveCustomerSession(existingSession);
+      sessionToken = existingSession.sessionToken;
+    } else {
+      const activeOffer = this.db.getActiveOfferByBusinessId(businessId);
+      sessionToken = generateSecureToken(32);
+      const session: CustomerSession = {
+        sessionId: `cs_${generateSecureToken(8)}`,
+        sessionToken,
+        sessionKey: `sk_${generateSecureToken(16)}`,
+        businessId,
+        offerId: activeOffer ? activeOffer.id : '',
+        customerId: customer.id,
+        customerNumber: fullMobile,
+        authType: 'qr',
+        currentStage: 'auth',
+        status: 'used',
+        isUsed: true,
+        usedAt: nowIso,
+        createdAt: nowIso,
+        expiresAt: new Date(Date.now() + CUSTOMER_SESSION_TTL_MS).toISOString(),
+      };
+      this.db.saveCustomerSession(session);
+    }
 
     return {
       customer,

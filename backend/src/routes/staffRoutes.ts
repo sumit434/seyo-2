@@ -43,7 +43,125 @@ router.get('/terminal-data', staffAuthMiddleware, async (req: AuthenticatedStaff
     }
 
     const offer = db.getActiveOfferByBusinessId(businessId) || null;
-    const entries = db.getMerchantEntriesByBusinessId(businessId);
+    let entries = db.getMerchantEntriesByBusinessId(businessId);
+
+    // Normalize entries for Combined Tier to guarantee the 3 entry options
+    if (business.tier === 'combined') {
+      let qrEntry = entries.find(e => e.entryType === 'merchant_qr');
+      if (!qrEntry) {
+        qrEntry = {
+          id: `entry_qr_${business.id}`,
+          businessId: business.id,
+          businessSlug: business.slug,
+          entryType: 'merchant_qr',
+          label: 'Dynamic QR',
+          permanentCode: `${business.slug.toUpperCase()}-QR`,
+          targetTier: 'combined',
+          createdAt: new Date().toISOString(),
+        };
+        db.saveMerchantEntry(qrEntry);
+        entries.push(qrEntry);
+      } else {
+        qrEntry.label = 'Dynamic QR';
+      }
+
+      let nfcEntry = entries.find(e => e.entryType === 'nfc_tag' || e.entryType === 'combined');
+      if (!nfcEntry) {
+        nfcEntry = {
+          id: `entry_nfc_${business.id}`,
+          businessId: business.id,
+          businessSlug: business.slug,
+          entryType: 'combined',
+          label: 'Physical NFC Tag',
+          permanentCode: `${business.slug.toUpperCase()}-NFC`,
+          targetTier: 'combined',
+          createdAt: new Date().toISOString(),
+        };
+        db.saveMerchantEntry(nfcEntry);
+        entries.push(nfcEntry);
+      } else {
+        nfcEntry.label = 'Physical NFC Tag';
+        nfcEntry.entryType = 'combined';
+      }
+
+      let loyaltyEntry = entries.find(e => e.entryType === 'loyalty' || e.entryType === 'instant_loyalty');
+      if (!loyaltyEntry) {
+        loyaltyEntry = {
+          id: `entry_loyalty_${business.id}`,
+          businessId: business.id,
+          businessSlug: business.slug,
+          entryType: 'loyalty',
+          label: 'Express Loyalty NFC Tag',
+          permanentCode: `${business.slug.toUpperCase()}-LOYALTY`,
+          targetTier: 'combined',
+          createdAt: new Date().toISOString(),
+        };
+        db.saveMerchantEntry(loyaltyEntry);
+        entries.push(loyaltyEntry);
+      } else {
+        loyaltyEntry.label = 'Express Loyalty NFC Tag';
+        loyaltyEntry.entryType = 'loyalty';
+      }
+
+      // Order: Dynamic QR -> Physical NFC Tag -> Express Loyalty NFC Tag
+      entries.sort((a, b) => {
+        const order: Record<string, number> = {
+          merchant_qr: 1,
+          combined: 2,
+          nfc_tag: 2,
+          loyalty: 3,
+          instant_loyalty: 3,
+        };
+        return (order[a.entryType] || 99) - (order[b.entryType] || 99);
+      });
+    } else {
+      // Individual tiers: Main Counter Printed QR (Dynamic QR) + Physical NFC Tag
+      let qrEntry = entries.find(e => e.entryType === 'merchant_qr');
+      if (!qrEntry) {
+        qrEntry = {
+          id: `entry_qr_${business.id}`,
+          businessId: business.id,
+          businessSlug: business.slug,
+          entryType: 'merchant_qr',
+          label: 'Dynamic QR',
+          permanentCode: `${business.slug.toUpperCase()}-QR`,
+          targetTier: business.tier,
+          createdAt: new Date().toISOString(),
+        };
+        db.saveMerchantEntry(qrEntry);
+        entries.push(qrEntry);
+      } else {
+        qrEntry.label = 'Dynamic QR';
+      }
+
+      let nfcEntry = entries.find(e => e.entryType === 'nfc_tag' || e.entryType === 'combined');
+      if (!nfcEntry) {
+        nfcEntry = {
+          id: `entry_nfc_${business.id}`,
+          businessId: business.id,
+          businessSlug: business.slug,
+          entryType: 'nfc_tag',
+          label: 'Physical NFC Tag',
+          permanentCode: `${business.slug.toUpperCase()}-NFC`,
+          targetTier: business.tier,
+          createdAt: new Date().toISOString(),
+        };
+        db.saveMerchantEntry(nfcEntry);
+        entries.push(nfcEntry);
+      } else {
+        nfcEntry.label = 'Physical NFC Tag';
+      }
+
+      entries.sort((a, b) => {
+        const order: Record<string, number> = {
+          merchant_qr: 1,
+          nfc_tag: 2,
+          combined: 2,
+        };
+        return (order[a.entryType] || 99) - (order[b.entryType] || 99);
+      });
+    }
+
     const customers = db.getCustomersByBusinessId(businessId);
     const rewards = db.getRewardsByBusinessId(businessId);
     const reviews = db.getReviewLogsByBusinessId(businessId);
@@ -80,9 +198,23 @@ router.get('/terminal-data', staffAuthMiddleware, async (req: AuthenticatedStaff
     const entriesWithQr = await Promise.all(
       entries.map(async entry => {
         let customerUrl = `${baseUrl}/c/${business.slug}/v`;
-        if (entry.entryType === 'instant_loyalty') {
+        let sessionKey: string | undefined;
+        let expiresAt: string | undefined;
+
+        if (entry.entryType === 'merchant_qr') {
+          let activeQrSession = db.getActiveQrSessionForBusiness(business.id);
+          if (!activeQrSession) {
+            activeQrSession = db.createQrSession(business.id, offer?.id || '');
+          }
+          sessionKey = activeQrSession.sessionKey;
+          expiresAt = activeQrSession.expiresAt;
+          customerUrl = `${baseUrl}/c/${business.slug}/v?sk=${activeQrSession.sessionKey}`;
+        } else if (entry.entryType === 'loyalty' || entry.entryType === 'instant_loyalty') {
           customerUrl = `${baseUrl}/c/${business.slug}/loyalty`;
+        } else {
+          customerUrl = `${baseUrl}/c/${business.slug}/v`;
         }
+
         let qrDataUrl = '';
         try {
           qrDataUrl = await QRCode.toDataURL(customerUrl, {
@@ -97,6 +229,8 @@ router.get('/terminal-data', staffAuthMiddleware, async (req: AuthenticatedStaff
           ...entry,
           customerUrl,
           qrDataUrl,
+          sessionKey,
+          expiresAt,
         };
       })
     );
@@ -262,6 +396,61 @@ router.post('/activate-offer', staffAuthMiddleware, (req: AuthenticatedStaffRequ
   }
 });
 
+
+// Refresh Dynamic Counter QR session key
+router.post('/qr/refresh', staffAuthMiddleware, async (req: AuthenticatedStaffRequest, res: Response, next) => {
+  try {
+    const businessId = req.staffSession!.businessId;
+    const business = db.getBusinessById(businessId);
+    if (!business) {
+      return res.status(404).json({ success: false, message: 'Business not found' });
+    }
+    const offer = db.getActiveOfferByBusinessId(businessId);
+
+    // 1. Invalidate previous unused QR session keys for this business
+    db.invalidateUnusedQrSessions(businessId);
+
+    // 2. Generate new 15-minute QR session key
+    const newSession = db.createQrSession(businessId, offer?.id || '');
+
+    // 3. Compute base URL
+    let baseUrl = process.env.APP_URL && process.env.APP_URL !== 'MY_APP_URL'
+      ? process.env.APP_URL.replace(/\/$/, '')
+      : '';
+
+    if (!baseUrl) {
+      const forwardedHost = req.get('x-forwarded-host');
+      const forwardedProto = req.get('x-forwarded-proto') || (req.protocol === 'https' ? 'https' : 'http');
+      if (forwardedHost) {
+        baseUrl = `${forwardedProto}://${forwardedHost}`;
+      } else {
+        const host = req.get('host') || 'localhost:3000';
+        const protocol = req.protocol === 'https' || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
+        baseUrl = `${protocol}://${host}`;
+      }
+    }
+
+    // 4. Generate new Customer URL
+    const customerUrl = `${baseUrl}/c/${business.slug}/v?sk=${newSession.sessionKey}`;
+
+    // 5. Generate new QR data URL
+    const qrDataUrl = await QRCode.toDataURL(customerUrl, {
+      margin: 1,
+      width: 280,
+      color: { dark: '#0e7c66', light: '#ffffff' },
+    });
+
+    res.json({
+      success: true,
+      sessionKey: newSession.sessionKey,
+      customerUrl,
+      qrDataUrl,
+      expiresAt: newSession.expiresAt,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Helper route to generate standalone QR code for any URL
 router.get('/qr-code', async (req: Request, res: Response, next) => {

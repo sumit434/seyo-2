@@ -12,7 +12,8 @@ export class CustomerStatusService {
   public evaluateStatus(
     business: Business,
     offer: Offer | null,
-    customer: Customer | null
+    customer: Customer | null,
+    entryType?: string
   ): CustomerStatusResponse['status'] {
     if (!customer) {
       return {
@@ -37,7 +38,8 @@ export class CustomerStatusService {
     const spinCompletedToday = isSameMerchantDay(customer.lastSpinAt, now, tz);
     const loyaltyCompletedToday = isSameMerchantDay(customer.lastVisitAt, now, tz);
 
-    const hasSpinTier = business.tier === 'spin' || business.tier === 'combined';
+    const isExpressLoyalty = entryType === 'loyalty' || entryType === 'instant_loyalty';
+    const hasSpinTier = !isExpressLoyalty && (business.tier === 'spin' || business.tier === 'combined');
     const hasLoyaltyTier = business.tier === 'loyalty' || business.tier === 'combined';
 
     const loyaltyTarget = offer?.loyaltyTarget || business.loyaltyTarget || 6;
@@ -60,9 +62,12 @@ export class CustomerStatusService {
     );
 
     // Individual app flow completed today (Spin finished, Loyalty stamped today, Voucher redeemed or deferred)
-    const individualFlowCompleted = 
-      (hasSpinTier && spinCompletedToday && (!activeReward || customer.voucherDeferred)) ||
-      (hasLoyaltyTier && loyaltyCompletedToday && (!activeReward || customer.voucherDeferred));
+    const individualFlowCompleted = isExpressLoyalty
+      ? (loyaltyCompletedToday && (!activeReward || customer.voucherDeferred))
+      : (
+          (hasSpinTier && spinCompletedToday && (!activeReward || customer.voucherDeferred)) ||
+          (hasLoyaltyTier && loyaltyCompletedToday && (!activeReward || customer.voucherDeferred))
+        );
 
     // Determine First Incomplete Stage
     let currentStage: CustomerJourneyStage = 'cooldown';
@@ -125,11 +130,12 @@ export class CustomerStatusService {
   public formatStatusResponse(
     business: Business,
     offer: Offer | null,
-    customer: Customer | null
+    customer: Customer | null,
+    entryType?: string
   ): CustomerStatusResponse {
     const defaultGoogleUrl = `https://maps.google.com/?q=${encodeURIComponent(business.name.replace(/\s+/g, '+'))}`;
     const effectiveReviewUrl = offer?.googleReviewUrl || business.googleReviewUrl || defaultGoogleUrl;
-    const status = this.evaluateStatus(business, offer, customer);
+    const status = this.evaluateStatus(business, offer, customer, entryType);
 
     return {
       business: {

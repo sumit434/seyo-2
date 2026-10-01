@@ -3,7 +3,7 @@ import { generateSecureToken } from '../utils/crypto';
 import { CustomerSession, MerchantEntry } from '../../../shared/types/qr';
 import { Business } from '../../../shared/types/business';
 import { Offer } from '../../../shared/types/offer';
-import { CUSTOMER_SESSION_TTL_MS } from '../../../shared/constants/limits';
+import { CUSTOMER_SESSION_TTL_MS, QR_SESSION_KEY_TTL_MS } from '../../../shared/constants/limits';
 
 export class CustomerSessionService {
   private db: MemoryDB;
@@ -58,21 +58,36 @@ export class CustomerSessionService {
   }
 
   /**
-   * Create or validate a customer session
+   * Create or validate a customer session with unique short-lived session key
    */
-  public createSession(businessId: string, offerId: string, authType: 'qr' | 'nfc', customerId?: string): CustomerSession {
+  public createSession(
+    businessId: string,
+    offerId: string,
+    authType: 'qr' | 'nfc',
+    customerId?: string,
+    sessionKey?: string,
+    entryType: 'combined' | 'loyalty' | string = 'combined'
+  ): CustomerSession {
     const sessionToken = generateSecureToken(32);
+    const actualSessionKey = sessionKey || (authType === 'qr' ? `sk_${generateSecureToken(16)}` : `nfc_${generateSecureToken(16)}`);
     const nowIso = new Date().toISOString();
-    const expiresAt = new Date(Date.now() + CUSTOMER_SESSION_TTL_MS).toISOString();
+    const expiresAt = new Date(Date.now() + QR_SESSION_KEY_TTL_MS).toISOString();
+    const sessionId = `cs_${generateSecureToken(8)}`;
 
     const session: CustomerSession = {
-      sessionId: `cs_${generateSecureToken(8)}`,
+      id: sessionId,
+      sessionId,
       sessionToken,
+      sessionKey: actualSessionKey,
       businessId,
       offerId,
       customerId,
       authType,
-      currentStage: customerId ? 'spin' : 'auth',
+      source: authType,
+      entryType,
+      qrKey: authType === 'qr' ? actualSessionKey : null,
+      currentStage: customerId ? (entryType === 'loyalty' ? 'loyalty' : 'spin') : 'auth',
+      status: 'unused',
       isUsed: false,
       createdAt: nowIso,
       expiresAt,

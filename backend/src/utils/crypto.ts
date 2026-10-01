@@ -170,3 +170,14 @@ export function maskMobile(mobile: string): string {
   const last4 = cleaned.slice(-4);
   return '******' + last4;
 }
+
+/**
+ * Normalize phone number to digits and leading plus: e.g. "+1 (555) 123-4567" -> "+15551234567"
+ */
+export function normalizePhone(phone: string): string {
+  const trimmed = phone.trim();
+  const hasPlus = trimmed.startsWith('+');
+  const digits = trimmed.replace(/\D/g, '');
+  return hasPlus ? `+${digits}` : digits;
+}
+

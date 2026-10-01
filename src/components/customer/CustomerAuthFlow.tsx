@@ -11,7 +11,8 @@ interface CustomerAuthFlowProps {
   businessName: string;
   logoEmoji: string;
   accentColor: string;
-  onAuthenticated: (payload: { sessionToken: string } & CustomerStatusResponse) => void;
+  sessionKey?: string;
+  onAuthenticated: (payload: { sessionToken: string; sessionKey?: string } & CustomerStatusResponse) => void;
 }
 
 type AuthStep = 'mobile' | 'otp' | 'name';
@@ -21,6 +22,7 @@ export const CustomerAuthFlow: React.FC<CustomerAuthFlowProps> = ({
   businessName,
   logoEmoji,
   accentColor,
+  sessionKey,
   onAuthenticated,
 }) => {
   const [step, setStep] = useState<AuthStep>('mobile');
@@ -43,7 +45,7 @@ export const CustomerAuthFlow: React.FC<CustomerAuthFlowProps> = ({
     setIsLoading(true);
     setError(null);
     try {
-      const res = await customerAuthService.requestOtp(businessId, mobile, countryCode);
+      const res = await customerAuthService.requestOtp(businessId, mobile, countryCode, sessionKey);
       setMaskedMobile(res.maskedMobile);
       setDemoOtp(res.demoOtp);
       setStep('otp');
@@ -64,7 +66,7 @@ export const CustomerAuthFlow: React.FC<CustomerAuthFlowProps> = ({
     setIsLoading(true);
     setError(null);
     try {
-      const res = await customerAuthService.verifyOtp(businessId, mobile, otp, undefined, countryCode);
+      const res = await customerAuthService.verifyOtp(businessId, mobile, otp, undefined, countryCode, sessionKey);
       if (res.isNew && (!res.customer?.name || res.customer.name === 'Guest')) {
         setStep('name');
       } else {
@@ -82,7 +84,7 @@ export const CustomerAuthFlow: React.FC<CustomerAuthFlowProps> = ({
     setIsLoading(true);
     setError(null);
     try {
-      const res = await customerAuthService.verifyOtp(businessId, mobile, otp, name.trim(), countryCode);
+      const res = await customerAuthService.verifyOtp(businessId, mobile, otp, name.trim(), countryCode, sessionKey);
       onAuthenticated(res);
     } catch (err: any) {
       setError(err.message || 'Failed to save profile');

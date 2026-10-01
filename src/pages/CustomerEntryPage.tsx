@@ -14,23 +14,25 @@ import { CooldownScreen } from '../components/customer/CooldownScreen';
 interface CustomerEntryPageProps {
   slug: string;
   entryMode?: 'combined' | 'spin' | 'loyalty' | 'review';
+  initialSessionKey?: string;
 }
 
-export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entryMode = 'combined' }) => {
+export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entryMode = 'combined', initialSessionKey }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [statusData, setStatusData] = useState<CustomerStatusResponse | null>(null);
   const [isActiveOffer, setIsActiveOffer] = useState(true);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
 
-  // URL Sanitization on entry (Specification section 50)
-  useEffect(() => {
+  const getUrlSessionKey = () => {
+    if (typeof window === 'undefined') return null;
     const params = new URLSearchParams(window.location.search);
-    if (params.get('key') || params.get('token')) {
-      const cleanUrl = window.location.pathname;
-      window.history.replaceState({}, document.title, cleanUrl);
-    }
-  }, []);
+    return params.get('sk') || params.get('key') || params.get('token') || params.get('sessionKey') || null;
+  };
+
+  const [sessionKey, setSessionKey] = useState<string | null>(() => {
+    return initialSessionKey || getUrlSessionKey();
+  });
 
   const loadCustomerJourney = async () => {
     setLoading(true);
@@ -38,9 +40,19 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
     try {
       const storedToken = sessionStorage.getItem(`seyo_customer_session_${slug}`);
       const storedCustomerId = sessionStorage.getItem(`seyo_customer_id_${slug}`);
+      const activeKey = sessionKey || initialSessionKey || getUrlSessionKey();
 
-      // 1. Resolve merchant entry
-      const resolveRes = await customerService.resolveEntry(slug);
+      // 1. Resolve merchant entry with unique session key
+      const resolveRes = await customerService.resolveEntry(
+        slug,
+        entryMode === 'loyalty' ? 'nfc' : 'qr',
+        activeKey || undefined,
+        entryMode
+      );
+
+      if (resolveRes.sessionKey) {
+        setSessionKey(resolveRes.sessionKey);
+      }
 
       if (!resolveRes.isActive) {
         setIsActiveOffer(false);
@@ -73,7 +85,7 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
 
       // 2. Fetch customer status if authenticated
       if (token && storedCustomerId) {
-        const fullStatus = await customerService.getStatus(slug, token, storedCustomerId);
+        const fullStatus = await customerService.getStatus(slug, token, storedCustomerId, entryMode);
         setStatusData(fullStatus);
       } else {
         setStatusData({
@@ -167,8 +179,12 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
           businessName={business.name}
           logoEmoji={business.logoEmoji}
           accentColor={business.accentColor}
+          sessionKey={sessionKey || undefined}
           onAuthenticated={payload => {
             sessionStorage.setItem(`seyo_customer_session_${slug}`, payload.sessionToken);
+            if (payload.sessionKey) {
+              setSessionKey(payload.sessionKey);
+            }
             if (payload.customer) {
               sessionStorage.setItem(`seyo_customer_id_${slug}`, payload.customer.id);
             }
@@ -198,18 +214,6 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
             </p>
           </div>
         </div>
-
-        <button
-          type="button"
-          onClick={() => {
-            sessionStorage.removeItem(`seyo_customer_id_${slug}`);
-            sessionStorage.removeItem(`seyo_customer_session_${slug}`);
-            loadCustomerJourney();
-          }}
-          className="text-xs text-[#6a787e] hover:text-[#10181c] underline cursor-pointer"
-        >
-          Sign Out
-        </button>
       </div>
 
       {/* STAGE 1: ACTIVE VOUCHER (Needs staff PIN redemption) */}
@@ -226,11 +230,11 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
           businessId={business.id}
           customerId={customer.id}
           onRedeemed={async () => {
-            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
+            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id, entryMode);
             setStatusData(updated);
           }}
           onContinue={async () => {
-            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
+            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id, entryMode);
             setStatusData(updated);
           }}
         />
@@ -244,7 +248,7 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
           slices={offer.spinWheelConfiguration}
           accentColor={business.accentColor}
           onSpinCompleted={async reward => {
-            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
+            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id, entryMode);
             setStatusData(updated);
           }}
         />
@@ -264,11 +268,11 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
           businessId={business.id}
           customerId={customer.id}
           onRedeemed={async () => {
-            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
+            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id, entryMode);
             setStatusData(updated);
           }}
           onContinue={async () => {
-            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
+            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id, entryMode);
             setStatusData(updated);
           }}
         />
@@ -285,11 +289,11 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
           loyaltyRewardTitle={offer.loyaltyReward || 'Special Gift'}
           isStampedToday={status.loyaltyCompletedToday}
           onStampSuccess={async () => {
-            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
+            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id, entryMode);
             setStatusData(updated);
           }}
           onContinue={async () => {
-            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
+            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id, entryMode);
             setStatusData(updated);
           }}
         />
@@ -304,7 +308,7 @@ export const CustomerEntryPage: React.FC<CustomerEntryPageProps> = ({ slug, entr
           customerName={customer.name}
           googleReviewUrl={offer.googleReviewUrl || business.googleReviewUrl || `https://maps.google.com/?q=${encodeURIComponent(business.name)}`}
           onReviewCompleted={async () => {
-            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id);
+            const updated = await customerService.getStatus(slug, sessionToken || undefined, customer.id, entryMode);
             setStatusData(updated);
           }}
         />

@@ -13,6 +13,7 @@ router.get('/resolve/:identifier', (req: Request, res: Response, next) => {
   try {
     const { identifier } = req.params;
     const authType = (req.query.type === 'nfc' ? 'nfc' : 'qr') as 'qr' | 'nfc';
+    const sk = (req.query.sk || req.query.sessionKey || req.query.key || req.query.token) as string | undefined;
 
     const { business, offer, entry, isActive } = sessionService.resolveMerchant(identifier);
 
@@ -34,17 +35,55 @@ router.get('/resolve/:identifier', (req: Request, res: Response, next) => {
       });
     }
 
-    // Create session
-    const session = sessionService.createSession(business.id, offer.id, authType);
+    const requestedEntryType = (req.query.entryType as string) || (entry?.entryType === 'loyalty' || entry?.entryType === 'instant_loyalty' ? 'loyalty' : 'combined');
+    const effectiveEntryType: 'combined' | 'loyalty' = requestedEntryType === 'loyalty' ? 'loyalty' : 'combined';
+
+    let session = sk ? db.getCustomerSession(sk) : undefined;
+
+    if (sk) {
+      if (!session) {
+        return res.status(400).json({
+          success: false,
+          error: 'INVALID_SESSION_KEY',
+          message: 'This QR code or session is invalid. Please scan a new QR code.',
+        });
+      }
+
+      if (new Date(session.expiresAt).getTime() < Date.now()) {
+        return res.status(400).json({
+          success: false,
+          error: 'SESSION_EXPIRED',
+          message: 'This QR code or session has expired. Please scan a new QR code.',
+        });
+      }
+
+      if (session.status === 'completed') {
+        return res.status(403).json({
+          success: false,
+          error: 'SESSION_ALREADY_USED',
+          message: 'This QR/session has already been used. Please scan a new QR code.',
+        });
+      }
+
+      if (!session.entryType) {
+        session.entryType = effectiveEntryType;
+        db.saveCustomerSession(session);
+      }
+    } else {
+      // NFC tap or entry without pre-existing session key
+      session = sessionService.createSession(business.id, offer.id, authType, undefined, undefined, effectiveEntryType);
+    }
 
     // Initial status without logged-in customer
-    const statusPayload = statusService.formatStatusResponse(business, offer, null);
+    const sessionEntryType = session.entryType || effectiveEntryType;
+    const statusPayload = statusService.formatStatusResponse(business, offer, null, sessionEntryType);
 
     res.json({
       success: true,
       isActive: true,
       sessionToken: session.sessionToken,
-      entryType: entry?.entryType || 'merchant_qr',
+      sessionKey: session.sessionKey,
+      entryType: sessionEntryType,
       ...statusPayload,
     });
   } catch (err) {

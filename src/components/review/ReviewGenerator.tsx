@@ -95,7 +95,11 @@ export const ReviewGenerator: React.FC<ReviewGeneratorProps> = ({
       // 3. Open Google review link
       const fallbackUrl = `https://maps.google.com/?q=${encodeURIComponent(businessName.replace(/\s+/g, '+'))}`;
       const targetUrl = res.googleReviewUrl || googleReviewUrl || fallbackUrl;
-      window.open(targetUrl, '_blank', 'noopener,noreferrer');
+      try {
+        window.open(targetUrl, '_blank', 'noopener,noreferrer');
+      } catch (e) {
+        console.warn('Pop-up was blocked or not allowed in current frame:', e);
+      }
 
       // 4. Mark google opened and complete review journey
       await customerService.markGoogleOpened(res.reviewLogId, customerId);
